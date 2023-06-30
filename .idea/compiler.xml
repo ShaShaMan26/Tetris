@@ -9,5 +9,8 @@
         <module name="Tetris" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="res" target="19" />
+    </bytecodeTargetLevel>
   </component>
 </project>
