@@ -1,12 +1,11 @@
-import Game.GameBoard;
 import Game.GameInstance;
-import Game.Tetrimino.*;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         JFrame gameWindow = new JFrame();
         gameWindow.setTitle("Tetris");
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

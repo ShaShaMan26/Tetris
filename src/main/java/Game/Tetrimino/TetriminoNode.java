@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class TetriminoNode extends Component {
+    private boolean active = true;
     private BufferedImage sprite;
     private final int SIDELENGTH;
     private int colNum;
@@ -39,10 +40,23 @@ public class TetriminoNode extends Component {
         rowNum += numOfRows;
     }
 
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-        g.setColor(Color.YELLOW);
-        g.fillRect(colNum*SIDELENGTH, rowNum*SIDELENGTH, SIDELENGTH, SIDELENGTH);
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setSprite(BufferedImage sprite) {
+        this.sprite = sprite;
+    }
+
+    public void paint(Graphics g) {
+        if (active) {
+            super.paint(g);
+
+            g.drawImage(sprite, colNum * SIDELENGTH, rowNum * SIDELENGTH, SIDELENGTH, SIDELENGTH, null);
+        }
     }
 }

@@ -1,9 +1,9 @@
 package Game;
 
-import Game.Tetrimino.OTetrimino;
-import Game.Tetrimino.Tetrimino;
+import Game.Tetrimino.*;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class GameInstance extends JComponent {
     JFrame gameWindow;
@@ -22,29 +22,29 @@ public class GameInstance extends JComponent {
         requestFocus();
     }
 
-    public void spawnTetrimino() {
-        gameBoard.setActiveTetrimino(new OTetrimino(5, 2));
+    public void spawnTetrimino() throws IOException {
+        gameBoard.setActiveTetrimino(new LTetrimino(5, 2));
     }
 
-    public void update() {
+    public void update() throws IOException {
         Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
 
         if (keyHandler.downPressed
-                && activeTetrimino.getYPos() < gameBoard.getBoardHeight() - 1) {
+                && gameBoard.aboveVirBound(activeTetrimino)) {
             activeTetrimino.moveDown();
         }
         if (keyHandler.leftPressed
-                && activeTetrimino.getXPos() > 1
+                && gameBoard.rightOfHorBounds(activeTetrimino)
                 && !gameBoard.isTetriminoToTheLeftOf(activeTetrimino)) {
             activeTetrimino.moveLeft();
         }
         if (keyHandler.rightPressed
-                && activeTetrimino.getXPos() < gameBoard.getBoardWidth() - 1
+                && gameBoard.leftOfHorBounds(activeTetrimino)
                 && !gameBoard.isTetriminoToTheRightOf(activeTetrimino)) {
             activeTetrimino.moveRight();
         }
         if (keyHandler.upPressed) {
-            activeTetrimino.hardDrop(gameBoard.getLowestDropOf(activeTetrimino));
+            gameBoard.hardDrop(activeTetrimino);
         }
         if (keyHandler.leftRotatePressed) {
             activeTetrimino.rotateLeft();
@@ -53,13 +53,15 @@ public class GameInstance extends JComponent {
             activeTetrimino.rotateRight();
         }
 
-        if (activeTetrimino.getYPos() == gameBoard.getBoardHeight() - 1
+        if (!gameBoard.aboveVirBound(activeTetrimino)
                 || gameBoard.isTetriminoBelow(activeTetrimino)) {
             spawnTetrimino();
         }
+
+        gameBoard.checkForRowClears();
     }
 
-    public void run() {
+    public void run() throws IOException {
         long lastTime = System.nanoTime();
         double amountOfTicks = 15.0;
         double ns = 1000000000 / amountOfTicks;

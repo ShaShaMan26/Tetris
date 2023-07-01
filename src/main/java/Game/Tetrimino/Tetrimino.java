@@ -1,19 +1,28 @@
 package Game.Tetrimino;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public abstract class Tetrimino extends Component {
     private int xPos;
     private int yPos;
-    private Dimension origin;
+    private Point origin;
     private TetriminoNode[] tetriminoNodes;
 
     public Tetrimino(int xPos, int yPos) {
         this.xPos = xPos;
         this.yPos = yPos;
+        this.origin = new Point(xPos, yPos);
     }
 
-    public void setOrigin(Dimension origin) {
+    public void setSprite(BufferedImage sprite) {
+        for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+            tetriminoNode.setSprite(sprite);
+        }
+    }
+
+    public void setOrigin(Point origin) {
         this.origin = origin;
     }
 
@@ -22,7 +31,22 @@ public abstract class Tetrimino extends Component {
     }
 
     public TetriminoNode[] getTetriminoNodes() {
-        return tetriminoNodes;
+
+        ArrayList<TetriminoNode> tetriminoNodes = new ArrayList<>();
+
+        for (TetriminoNode tetriminoNode : this.tetriminoNodes) {
+            if (tetriminoNode.getActive()) {
+                tetriminoNodes.add(tetriminoNode);
+            }
+        }
+
+        TetriminoNode[] finalTetriminoNodes = new TetriminoNode[tetriminoNodes.size()];
+
+        for (int i = 0; i < tetriminoNodes.size(); i++) {
+            finalTetriminoNodes[i] = tetriminoNodes.get(i);
+        }
+
+        return finalTetriminoNodes;
     }
 
     public void moveRight() {
@@ -57,12 +81,8 @@ public abstract class Tetrimino extends Component {
         this.yPos = yPos;
     }
 
-    public int getXPos() {
-        return xPos;
-    }
-
-    public int getYPos() {
-        return yPos;
+    public Point getOrigin() {
+        return origin;
     }
 
     public abstract void rotateLeft();
