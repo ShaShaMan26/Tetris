@@ -28,10 +28,6 @@ public class TetriminoNode extends Component {
         rowNum++;
     }
 
-    public void moveUp() {
-        rowNum--;
-    }
-
     public int getYPos() {
         return rowNum;
     }

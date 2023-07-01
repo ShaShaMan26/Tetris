@@ -2,19 +2,18 @@ package Game.Tetrimino;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Tetrimino extends Component {
-    private int rotation = 1;
+    private int rotation = 0;
     private int xPos;
     private int yPos;
-    private Point origin;
     private TetriminoNode[] tetriminoNodes;
 
     public Tetrimino(int xPos, int yPos) {
         this.xPos = xPos;
         this.yPos = yPos;
-        this.origin = new Point(xPos, yPos);
     }
 
     public void setSprite(BufferedImage sprite) {
@@ -23,8 +22,12 @@ public abstract class Tetrimino extends Component {
         }
     }
 
-    public void setOrigin(Point origin) {
-        this.origin = origin;
+    public int getXPos() {
+        return xPos;
+    }
+
+    public int getYPos() {
+        return yPos;
     }
 
     public int getRotation() {
@@ -78,34 +81,26 @@ public abstract class Tetrimino extends Component {
         }
     }
 
-    public void hardDrop(int yPos) {
-        for (TetriminoNode tetriminoNode : tetriminoNodes) {
-            tetriminoNode.moveDownBy(yPos - this.yPos);
-        }
+    public abstract void checkRotation() throws IOException;
 
-        this.yPos = yPos;
-    }
-
-    public Point getOrigin() {
-        return origin;
-    }
-
-    public void rotateLeft() {
+    public void rotateLeft() throws IOException {
         rotation--;
 
         if (rotation < 0) {
             rotation = 3;
         }
+
+        checkRotation();
     }
-    public void rotateRight() {
+    public void rotateRight() throws IOException {
         rotation++;
 
         if (rotation > 3) {
             rotation = 0;
         }
-    }
 
-    public abstract void checkRotation();
+        checkRotation();
+    }
 
     public void paint(Graphics g) {
         super.paint(g);

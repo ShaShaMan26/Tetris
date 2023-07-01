@@ -35,7 +35,7 @@ public class GameBoard extends JComponent {
         ArrayList<Tetrimino> tetriminos = new ArrayList<>();
 
         for (Component component : this.getComponents()) {
-            if (component instanceof Tetrimino) {
+            if (component instanceof Tetrimino && component != activeTetrimino) {
                 tetriminos.add((Tetrimino) component);
             }
         }
