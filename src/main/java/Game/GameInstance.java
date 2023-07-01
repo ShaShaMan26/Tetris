@@ -2,15 +2,18 @@ package Game;
 
 import Game.Tetrimino.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class GameInstance extends JComponent {
-    JFrame gameWindow;
-    GameBoard gameBoard;
-    KeyHandler keyHandler;
+    private final JFrame gameWindow;
+    private final GameBoard gameBoard;
+    private final KeyHandler keyHandler;
+    private BufferedImage JTetriminoSprite, OTetriminoSprite;
 
-    public GameInstance(JFrame gameWindow) {
+    public GameInstance(JFrame gameWindow) throws IOException {
         this.gameWindow = gameWindow;
         this.setSize(gameWindow.getSize());
 
@@ -20,10 +23,19 @@ public class GameInstance extends JComponent {
         keyHandler = new KeyHandler();
         gameWindow.addKeyListener(keyHandler);
         requestFocus();
+
+        loadSprites();
+
+        spawnTetrimino();
+    }
+
+    public void loadSprites() throws IOException {
+        JTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/J_Tetrimino_Sprite.png"));
+        OTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/O_Tetrimino_Sprite.png"));
     }
 
     public void spawnTetrimino() throws IOException {
-        gameBoard.setActiveTetrimino(new JTetrimino(4, 1));
+        gameBoard.setActiveTetrimino(new JTetrimino(4, 1, JTetriminoSprite));
     }
 
     public void update() throws IOException {

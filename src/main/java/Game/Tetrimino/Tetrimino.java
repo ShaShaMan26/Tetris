@@ -9,14 +9,20 @@ public abstract class Tetrimino extends Component {
     private int rotation = 0;
     private int xPos;
     private int yPos;
+    private BufferedImage sprite;
     private TetriminoNode[] tetriminoNodes;
 
-    public Tetrimino(int xPos, int yPos) {
+    public Tetrimino(int xPos, int yPos, BufferedImage sprite) {
         this.xPos = xPos;
         this.yPos = yPos;
+        this.sprite = sprite;
     }
 
     public void setSprite(BufferedImage sprite) {
+        this.sprite = sprite;
+    }
+
+    public void setNodeSprites() {
         for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
             tetriminoNode.setSprite(sprite);
         }

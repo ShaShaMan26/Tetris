@@ -7,9 +7,8 @@ import java.io.IOException;
 
 public class OTetrimino extends Tetrimino {
 
-    public OTetrimino(int xPos, int yPos) throws IOException {
-
-        super(xPos, yPos);
+    public OTetrimino(int xPos, int yPos, BufferedImage sprite) throws IOException {
+        super(xPos, yPos, sprite);
 
         TetriminoNode[] tetriminoNodes = new TetriminoNode[4];
 
@@ -18,11 +17,13 @@ public class OTetrimino extends Tetrimino {
         tetriminoNodes[2] = new TetriminoNode(xPos+1, yPos+1);
         tetriminoNodes[3] = new TetriminoNode(xPos, yPos+1);
 
-        this.setTetriminoNodes(tetriminoNodes);
+        setTetriminoNodes(tetriminoNodes);
+
+        checkRotation();
     }
 
     @Override
     public void checkRotation() throws IOException {
-        this.setSprite(ImageIO.read(getClass().getResourceAsStream("/Tetriminos/O_Tetrimino_Sprite.png")));
+        setNodeSprites();
     }
 }

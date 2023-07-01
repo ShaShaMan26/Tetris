@@ -19,8 +19,6 @@ public class Main {
         GameInstance gameInstance = new GameInstance(gameWindow);
         gameWindow.add(gameInstance);
 
-        gameInstance.spawnTetrimino();
-
         gameInstance.run();
     }
 }

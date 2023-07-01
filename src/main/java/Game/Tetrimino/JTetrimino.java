@@ -1,12 +1,13 @@
 package Game.Tetrimino;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class JTetrimino extends Tetrimino{
 
-    public JTetrimino(int xPos, int yPos) throws IOException {
-        super(xPos, yPos);
+    public JTetrimino(int xPos, int yPos, BufferedImage sprite) throws IOException {
+        super(xPos, yPos, sprite);
 
         checkRotation();
     }
@@ -45,8 +46,7 @@ public class JTetrimino extends Tetrimino{
             }
         }
 
-        this.setTetriminoNodes(tetriminoNodes);
-
-        this.setSprite(ImageIO.read(getClass().getResourceAsStream("/Tetriminos/J_Tetrimino_Sprite.png")));
+        setTetriminoNodes(tetriminoNodes);
+        setNodeSprites();
     }
 }
