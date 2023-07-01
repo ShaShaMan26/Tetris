@@ -18,10 +18,6 @@ public abstract class Tetrimino extends Component {
         this.sprite = sprite;
     }
 
-    public void setSprite(BufferedImage sprite) {
-        this.sprite = sprite;
-    }
-
     public void setNodeSprites() {
         for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
             tetriminoNode.setSprite(sprite);

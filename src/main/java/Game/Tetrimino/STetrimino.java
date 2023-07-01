@@ -3,9 +3,9 @@ package Game.Tetrimino;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class JTetrimino extends Tetrimino{
+public class STetrimino extends Tetrimino{
 
-    public JTetrimino(int xPos, int yPos, BufferedImage sprite) {
+    public STetrimino(int xPos, int yPos, BufferedImage sprite) throws IOException {
         super(xPos, yPos, sprite);
 
         checkRotation();
@@ -19,29 +19,17 @@ public class JTetrimino extends Tetrimino{
         int yPos = getYPos();
 
         switch (getRotation()) {
-            case 0 -> {
+            case 0, 2 -> {
                 tetriminoNodes[0] = new TetriminoNode(xPos, yPos);
                 tetriminoNodes[1] = new TetriminoNode(xPos+1, yPos);
-                tetriminoNodes[2] = new TetriminoNode(xPos-1, yPos);
-                tetriminoNodes[3] = new TetriminoNode(xPos+1, yPos+1);
-            }
-            case 1 -> {
-                tetriminoNodes[0] = new TetriminoNode(xPos, yPos);
-                tetriminoNodes[1] = new TetriminoNode(xPos, yPos-1);
                 tetriminoNodes[2] = new TetriminoNode(xPos, yPos+1);
                 tetriminoNodes[3] = new TetriminoNode(xPos-1, yPos+1);
             }
-            case 2 -> {
-                tetriminoNodes[0] = new TetriminoNode(xPos, yPos);
-                tetriminoNodes[1] = new TetriminoNode(xPos+1, yPos);
-                tetriminoNodes[2] = new TetriminoNode(xPos-1, yPos);
-                tetriminoNodes[3] = new TetriminoNode(xPos-1, yPos-1);
-            }
-            case 3 -> {
+            case 1, 3 -> {
                 tetriminoNodes[0] = new TetriminoNode(xPos, yPos);
                 tetriminoNodes[1] = new TetriminoNode(xPos, yPos+1);
-                tetriminoNodes[2] = new TetriminoNode(xPos, yPos-1);
-                tetriminoNodes[3] = new TetriminoNode(xPos+1, yPos-1);
+                tetriminoNodes[2] = new TetriminoNode(xPos-1, yPos);
+                tetriminoNodes[3] = new TetriminoNode(xPos-1, yPos-1);
             }
         }
 

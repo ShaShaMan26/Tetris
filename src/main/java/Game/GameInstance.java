@@ -12,7 +12,8 @@ import java.io.IOException;
 public class GameInstance extends JComponent implements KeyListener {
     private final JFrame gameWindow;
     private final GameBoard gameBoard;
-    private BufferedImage JTetriminoSprite, OTetriminoSprite;
+    private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
+            ZTetriminoSprite, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3;
 
     public GameInstance(JFrame gameWindow) throws IOException {
         this.gameWindow = gameWindow;
@@ -30,19 +31,39 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void loadSprites() throws IOException {
-        JTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/J_Tetrimino_Sprite.png"));
         OTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/O_Tetrimino_Sprite.png"));
+        JTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/J_Tetrimino_Sprite.png"));
+        TTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/T_Tetrimino_Sprite.png"));
+        LTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/L_Tetrimino_Sprite.png"));
+        STetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/S_Tetrimino_Sprite.png"));
+        ZTetriminoSprite = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/Z_Tetrimino_Sprite.png"));
+        ITetriminoSprite1 = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/I_Tetrimino_Sprite_1.png"));
+        ITetriminoSprite2 = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/I_Tetrimino_Sprite_2.png"));
+        ITetriminoSprite3 = ImageIO.read(getClass().getResourceAsStream("/Tetriminos/I_Tetrimino_Sprite_3.png"));
     }
 
     public void spawnTetrimino() throws IOException {
-        gameBoard.setActiveTetrimino(new JTetrimino(4, 1, JTetriminoSprite));
+        int tetriminoNum = (int)(Math.random() * 7);
+        int xSpawn = 4;
+        int ySpawn = 1;
+
+
+        switch (tetriminoNum) {
+            case 0 -> gameBoard.setActiveTetrimino(new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3));
+            case 1 -> gameBoard.setActiveTetrimino(new OTetrimino(xSpawn, ySpawn, OTetriminoSprite));
+            case 2-> gameBoard.setActiveTetrimino(new JTetrimino(xSpawn, ySpawn, JTetriminoSprite));
+            case 3 -> gameBoard.setActiveTetrimino(new LTetrimino(xSpawn, ySpawn, LTetriminoSprite));
+            case 4 -> gameBoard.setActiveTetrimino(new STetrimino(xSpawn, ySpawn, STetriminoSprite));
+            case 5 -> gameBoard.setActiveTetrimino(new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite));
+            case 6 -> gameBoard.setActiveTetrimino(new TTetrimino(xSpawn, ySpawn, TTetriminoSprite));
+        }
     }
 
     public void update() {
         gameBoard.checkForRowClears();
     }
 
-    public void run() throws IOException {
+    public void run() {
         long lastTime = System.nanoTime();
         double amountOfTicks = 144.0;
         double ns = 1000000000 / amountOfTicks;
@@ -90,7 +111,8 @@ public class GameInstance extends JComponent implements KeyListener {
         if (keyCode == KeyEvent.VK_S
                 || keyCode == KeyEvent.VK_DOWN) {
             int preMoveYPos = activeTetrimino.getYPos();
-            if (gameBoard.aboveVirBound(activeTetrimino)) {
+            if (gameBoard.aboveVirBound(activeTetrimino)
+                    && !gameBoard.isTetriminoBelow(activeTetrimino)) {
                 activeTetrimino.moveDown();
             }
             if (preMoveYPos == activeTetrimino.getYPos()) {
