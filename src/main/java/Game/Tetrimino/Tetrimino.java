@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public abstract class Tetrimino extends Component {
+    private int rotation = 1;
     private int xPos;
     private int yPos;
     private Point origin;
@@ -24,6 +25,10 @@ public abstract class Tetrimino extends Component {
 
     public void setOrigin(Point origin) {
         this.origin = origin;
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 
     public void setTetriminoNodes(TetriminoNode[] tetriminoNodes) {
@@ -85,8 +90,22 @@ public abstract class Tetrimino extends Component {
         return origin;
     }
 
-    public abstract void rotateLeft();
-    public abstract void rotateRight();
+    public void rotateLeft() {
+        rotation--;
+
+        if (rotation < 0) {
+            rotation = 3;
+        }
+    }
+    public void rotateRight() {
+        rotation++;
+
+        if (rotation > 3) {
+            rotation = 0;
+        }
+    }
+
+    public abstract void checkRotation();
 
     public void paint(Graphics g) {
         super.paint(g);

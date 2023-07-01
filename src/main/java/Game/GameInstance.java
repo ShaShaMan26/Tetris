@@ -23,7 +23,7 @@ public class GameInstance extends JComponent {
     }
 
     public void spawnTetrimino() throws IOException {
-        gameBoard.setActiveTetrimino(new LTetrimino(5, 2));
+        gameBoard.setActiveTetrimino(new JTetrimino(4, 1));
     }
 
     public void update() throws IOException {
