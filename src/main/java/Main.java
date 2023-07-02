@@ -20,6 +20,8 @@ public class Main {
         GameInstance gameInstance = new GameInstance(gameWindow);
         gameWindow.add(gameInstance);
 
+        gameInstance.setLevel(11);
+
         gameInstance.run();
     }
 }
