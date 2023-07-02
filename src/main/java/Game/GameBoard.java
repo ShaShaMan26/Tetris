@@ -6,6 +6,7 @@ import Game.Tetrimino.TetriminoNode;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameBoard extends JComponent {
     private final int boardWidth;
@@ -57,40 +58,64 @@ public class GameBoard extends JComponent {
         return boardWidth / tileSize;
     }
 
-    public void clearRow(int rowNum) {
-        for (Tetrimino tetrimino : getTetriminos()) {
-            for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                if (tetriminoNode.getYPos() == rowNum) {
-                    tetriminoNode.setActive(false);
-                }
-            }
+    public void clearQueuedRows() {
+        TetriminoNode[] nodesToBeCleared = getQueuedClears();
+
+        for (TetriminoNode tetriminoNode : nodesToBeCleared) {
+            tetriminoNode.setActive(false);
         }
 
-        for (Tetrimino tetrimino : getTetriminos()) {
-            for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                if (tetriminoNode.getYPos() < rowNum) {
-                    tetriminoNode.moveDown();
+        for (int row = getBoardHeight()-1; row > -1; row--) {
+            if (getNodesAt(row).length == 0) {
+                for (Tetrimino tetrimino : getTetriminos()) {
+                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
+                        if (tetriminoNode.getYPos() < row) {
+                            tetriminoNode.moveDown();
+                        }
+                    }
                 }
             }
         }
     }
 
-    public void checkForRowClears() {
-        int numOfNodes = 0;
+    public TetriminoNode[] getQueuedClears() {
+        ArrayList<TetriminoNode> nodesToBeCleared = new ArrayList<>();
 
         for (int row = 0; row < getBoardHeight(); row++) {
-            for (Tetrimino tetrimino : getTetriminos()) {
-                for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                    if (tetriminoNode.getYPos() == row) {
-                        numOfNodes++;
-                    }
+            TetriminoNode[] nodesAtRow = getNodesAt(row);
+
+            if (nodesAtRow.length == getBoardWidth()) {
+                nodesToBeCleared.addAll(Arrays.stream(nodesAtRow).toList());
+            }
+        }
+
+        TetriminoNode[] finalNodesToBeCleared = new TetriminoNode[nodesToBeCleared.size()];
+
+        for (int i = 0; i < nodesToBeCleared.size(); i++) {
+            finalNodesToBeCleared[i] = nodesToBeCleared.get(i);
+        }
+
+        return finalNodesToBeCleared;
+    }
+
+    public TetriminoNode[] getNodesAt(int row) {
+        ArrayList<TetriminoNode> nodesInRow = new ArrayList<>();
+
+        for (Tetrimino tetrimino : getTetriminos()) {
+            for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
+                if (tetriminoNode.getYPos() == row) {
+                    nodesInRow.add(tetriminoNode);
                 }
             }
-            if (numOfNodes == getBoardWidth()) {
-                clearRow(row);
-            }
-            numOfNodes = 0;
         }
+
+        TetriminoNode[] finalNodesInRow = new TetriminoNode[nodesInRow.size()];
+
+        for (int i = 0; i < nodesInRow.size(); i++) {
+            finalNodesInRow[i] = nodesInRow.get(i);
+        }
+
+        return finalNodesInRow;
     }
 
     public boolean isTetriminoBelow(Tetrimino tetrimino) {
@@ -181,7 +206,7 @@ public class GameBoard extends JComponent {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.setColor(Color.GRAY);
+        g.setColor(new Color(248,248,248));
         g.fillRect(0, 0, boardWidth, boardHeight);
 
         for (Component component : this.getComponents()) {

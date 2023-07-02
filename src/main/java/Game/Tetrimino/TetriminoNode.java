@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class TetriminoNode extends Component {
     private boolean active = true;
+    private boolean displayed = true;
     private BufferedImage sprite;
     private final int SIDELENGTH;
     private int colNum;
@@ -36,10 +37,6 @@ public class TetriminoNode extends Component {
         return colNum;
     }
 
-    public void moveDownBy(int numOfRows) {
-        rowNum += numOfRows;
-    }
-
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -52,8 +49,12 @@ public class TetriminoNode extends Component {
         this.sprite = sprite;
     }
 
+    public void toggleDisplayed() {
+        displayed = !displayed;
+    }
+
     public void paint(Graphics g) {
-        if (active) {
+        if (active && displayed) {
             super.paint(g);
 
             g.drawImage(sprite, colNum * SIDELENGTH, rowNum * SIDELENGTH, SIDELENGTH, SIDELENGTH, null);

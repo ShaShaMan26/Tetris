@@ -60,7 +60,23 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void update() {
-        gameBoard.checkForRowClears();
+        TetriminoNode[] queuedClears = gameBoard.getQueuedClears();
+
+        if (queuedClears.length > 0) {
+            for (int i = 6; i > 0; i--) {
+                try {
+                    Thread.sleep(100 * i);
+                } catch (InterruptedException ignored) {
+
+                }
+                for (TetriminoNode tetriminoNode : queuedClears) {
+                    tetriminoNode.toggleDisplayed();
+                }
+                gameWindow.repaint();
+            }
+        }
+
+        gameBoard.clearQueuedRows();
     }
 
     public void run() {
