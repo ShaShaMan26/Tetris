@@ -134,6 +134,34 @@ public class GameBoard extends JComponent {
         return false;
     }
 
+    public boolean isTetriminoBlocking(Tetrimino tetrimino) {
+        for (Component component : this.getComponents()) {
+            if (component instanceof Tetrimino
+                    && component != tetrimino) {
+                for (TetriminoNode tetriminoComponentNode : ((Tetrimino) component).getTetriminoNodes()) {
+                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
+                        if (tetriminoNode.getYPos() == tetriminoComponentNode.getYPos()
+                                && tetriminoComponentNode.getXPos() == tetriminoNode.getXPos()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isTetriminoOutOfBounds(Tetrimino tetrimino) {
+        for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
+            if (tetriminoNode.getXPos() > getBoardWidth() - 1 || tetriminoNode.getXPos() < 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public boolean isTetriminoToTheRightOf(Tetrimino tetrimino) {
         for (Component component : this.getComponents()) {
             if (component instanceof Tetrimino

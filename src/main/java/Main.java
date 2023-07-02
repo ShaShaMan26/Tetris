@@ -20,7 +20,8 @@ public class Main {
         GameInstance gameInstance = new GameInstance(gameWindow);
         gameWindow.add(gameInstance);
 
-        gameInstance.setLevel(11);
+        // 11 is max
+        gameInstance.setLevel(2);
 
         gameInstance.run();
     }

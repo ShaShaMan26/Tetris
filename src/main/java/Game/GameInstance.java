@@ -177,6 +177,10 @@ public class GameInstance extends JComponent implements KeyListener {
                 || keyCode == KeyEvent.VK_Z) {
             try {
                 activeTetrimino.rotateLeft();
+                if (gameBoard.isTetriminoBlocking(activeTetrimino)) {
+                    activeTetrimino.rotateRight();
+                }
+                correctPlacement(activeTetrimino);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -185,8 +189,22 @@ public class GameInstance extends JComponent implements KeyListener {
                 || keyCode == KeyEvent.VK_X) {
             try {
                 activeTetrimino.rotateRight();
+                if (gameBoard.isTetriminoBlocking(activeTetrimino)) {
+                    activeTetrimino.rotateLeft();
+                }
+                correctPlacement(activeTetrimino);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public void correctPlacement(Tetrimino tetrimino) {
+        while (gameBoard.isTetriminoOutOfBounds(tetrimino)) {
+            if (tetrimino.getXPos() < (gameBoard.getBoardWidth() / 2)) {
+                tetrimino.moveRight();
+            } else {
+                tetrimino.moveLeft();
             }
         }
     }
