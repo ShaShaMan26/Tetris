@@ -24,7 +24,6 @@ public class GameBoard extends JComponent {
     }
 
     public void setActiveTetrimino(Tetrimino tetrimino) {
-        this.add(tetrimino);
         this.activeTetrimino = tetrimino;
     }
 
