@@ -1,13 +1,10 @@
 package Game.Tetrimino;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class OTetrimino extends Tetrimino {
 
-    public OTetrimino(int xPos, int yPos, BufferedImage sprite) throws IOException {
+    public OTetrimino(int xPos, int yPos, BufferedImage sprite) {
         super(xPos, yPos, sprite);
 
         TetriminoNode[] tetriminoNodes = new TetriminoNode[4];
@@ -23,7 +20,7 @@ public class OTetrimino extends Tetrimino {
     }
 
     @Override
-    public void checkRotation() throws IOException {
+    public void checkRotation() {
         setNodeSprites();
     }
 }

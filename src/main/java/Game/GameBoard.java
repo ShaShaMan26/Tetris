@@ -14,6 +14,7 @@ public class GameBoard extends JComponent {
     private final int boardHeight;
     private final int tileSize;
     private Tetrimino activeTetrimino;
+    private Tetrimino ghostTetrimino;
 
     public GameBoard(Dimension displayDimension) {
         tileSize = displayDimension.height / 20;
@@ -32,30 +33,13 @@ public class GameBoard extends JComponent {
         return activeTetrimino;
     }
 
-    public Tetrimino[] getTetriminos() {
-        ArrayList<Tetrimino> tetriminos = new ArrayList<>();
-
-        for (Component component : this.getComponents()) {
-            if (component instanceof Tetrimino && component != activeTetrimino) {
-                tetriminos.add((Tetrimino) component);
-            }
-        }
-
-        Tetrimino[] finalTetriminos = new Tetrimino[tetriminos.size()];
-
-        for (int i = 0; i < tetriminos.size(); i++) {
-            finalTetriminos[i] = tetriminos.get(i);
-        }
-
-        return finalTetriminos;
-    }
-
     public TetriminoNode[] getTetriminoNodes() {
         ArrayList<TetriminoNode> tetriminoNodes = new ArrayList<>();
 
         for (Component component : this.getComponents()) {
             if (component instanceof Tetrimino
-                    && component != activeTetrimino) {
+                    && component != activeTetrimino
+                    && component != ghostTetrimino) {
                 tetriminoNodes.addAll(List.of(((Tetrimino) component).getTetriminoNodes()));
             }
         }
@@ -86,11 +70,9 @@ public class GameBoard extends JComponent {
 
         for (int row = getBoardTileHeight()-1; row > -1; row--) {
             if (getNodesOf(row).length == 0) {
-                for (Tetrimino tetrimino : getTetriminos()) {
-                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                        if (tetriminoNode.getYPos() < row) {
-                            tetriminoNode.moveDown();
-                        }
+                for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+                    if (tetriminoNode.getYPos() < row) {
+                        tetriminoNode.moveDown();
                     }
                 }
             }
@@ -120,11 +102,9 @@ public class GameBoard extends JComponent {
     public TetriminoNode[] getNodesOf(int row) {
         ArrayList<TetriminoNode> nodesInRow = new ArrayList<>();
 
-        for (Tetrimino tetrimino : getTetriminos()) {
-            for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                if (tetriminoNode.getYPos() == row) {
-                    nodesInRow.add(tetriminoNode);
-                }
+        for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+            if (tetriminoNode.getYPos() == row) {
+                nodesInRow.add(tetriminoNode);
             }
         }
 

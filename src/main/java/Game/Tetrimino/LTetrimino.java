@@ -1,11 +1,10 @@
 package Game.Tetrimino;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class LTetrimino extends Tetrimino{
 
-    public LTetrimino(int xPos, int yPos, BufferedImage sprite) throws IOException {
+    public LTetrimino(int xPos, int yPos, BufferedImage sprite) {
         super(xPos, yPos, sprite);
 
         checkRotation();

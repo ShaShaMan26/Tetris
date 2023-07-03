@@ -14,6 +14,7 @@ import java.util.Objects;
 public class GameInstance extends JComponent implements KeyListener {
     private int level = 0;
     private double fallTime = 0;
+    private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
     private final GameBoard gameBoard;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
@@ -31,8 +32,6 @@ public class GameInstance extends JComponent implements KeyListener {
         requestFocus();
 
         loadSprites();
-
-        spawnTetrimino();
     }
 
     public void setLevel(int level) {
@@ -56,21 +55,36 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void spawnTetrimino() throws IOException {
-        int tetriminoNum = (int)(Math.random() * 7);
         int xSpawn = 4;
         int ySpawn = 1;
 
-        switch (tetriminoNum) {
-            case 0 -> gameBoard.setActiveTetrimino(new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3));
-            case 1 -> gameBoard.setActiveTetrimino(new OTetrimino(xSpawn, ySpawn, OTetriminoSprite));
-            case 2-> gameBoard.setActiveTetrimino(new JTetrimino(xSpawn, ySpawn, JTetriminoSprite));
-            case 3 -> gameBoard.setActiveTetrimino(new LTetrimino(xSpawn, ySpawn, LTetriminoSprite));
-            case 4 -> gameBoard.setActiveTetrimino(new STetrimino(xSpawn, ySpawn, STetriminoSprite));
-            case 5 -> gameBoard.setActiveTetrimino(new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite));
-            case 6 -> gameBoard.setActiveTetrimino(new TTetrimino(xSpawn, ySpawn, TTetriminoSprite));
+        switch (nextTetriminoNum) {
+            case 0 -> {
+                gameBoard.setActiveTetrimino(new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3));
+            }
+            case 1 -> {
+                gameBoard.setActiveTetrimino(new OTetrimino(xSpawn, ySpawn, OTetriminoSprite));
+            }
+            case 2-> {
+                gameBoard.setActiveTetrimino(new JTetrimino(xSpawn, ySpawn, JTetriminoSprite));
+            }
+            case 3 -> {
+                gameBoard.setActiveTetrimino(new LTetrimino(xSpawn, ySpawn, LTetriminoSprite));
+            }
+            case 4 -> {
+                gameBoard.setActiveTetrimino(new STetrimino(xSpawn, ySpawn, STetriminoSprite));
+            }
+            case 5 -> {
+                gameBoard.setActiveTetrimino(new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite));
+            }
+            case 6 -> {
+                gameBoard.setActiveTetrimino(new TTetrimino(xSpawn, ySpawn, TTetriminoSprite));
+            }
         }
 
         gameBoard.add(gameBoard.getActiveTetrimino());
+
+        nextTetriminoNum = (int)(Math.random() * 7);
     }
 
     public void attemptToMoveDown(Tetrimino tetrimino) {
@@ -109,7 +123,6 @@ public class GameInstance extends JComponent implements KeyListener {
             try {
                 spawnTetrimino();
             } catch (IOException ignored) {
-
             }
         }
     }
