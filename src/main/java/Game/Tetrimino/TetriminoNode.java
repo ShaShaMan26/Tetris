@@ -45,6 +45,10 @@ public class TetriminoNode extends Component {
         this.rowNum = yPos;
     }
 
+    public void setXPos(int xPos) {
+        this.colNum = xPos;
+    }
+
     public void setActive(boolean active) {
         this.active = active;
     }

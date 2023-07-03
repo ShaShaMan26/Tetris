@@ -82,33 +82,40 @@ public class GameInstance extends JComponent implements KeyListener {
         gameBoard.toggleGhostPiece();
     }
 
-    public void spawnTetrimino() throws IOException {
+    public Tetrimino createTerimino(int tetriminoNum) {
         int xSpawn = 4;
         int ySpawn = 1;
+        Tetrimino tetrimino = null;
 
-        switch (nextTetriminoNum) {
+        switch (tetriminoNum) {
             case 0 -> {
-                gameBoard.setActiveTetrimino(new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3));
+                tetrimino = new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3);
             }
             case 1 -> {
-                gameBoard.setActiveTetrimino(new OTetrimino(xSpawn, ySpawn, OTetriminoSprite));
+                tetrimino = new OTetrimino(xSpawn, ySpawn, OTetriminoSprite);
             }
-            case 2-> {
-                gameBoard.setActiveTetrimino(new JTetrimino(xSpawn, ySpawn, JTetriminoSprite));
+            case 2 -> {
+                tetrimino = new JTetrimino(xSpawn, ySpawn, JTetriminoSprite);
             }
             case 3 -> {
-                gameBoard.setActiveTetrimino(new LTetrimino(xSpawn, ySpawn, LTetriminoSprite));
+                tetrimino = new LTetrimino(xSpawn, ySpawn, LTetriminoSprite);
             }
             case 4 -> {
-                gameBoard.setActiveTetrimino(new STetrimino(xSpawn, ySpawn, STetriminoSprite));
+                tetrimino = new STetrimino(xSpawn, ySpawn, STetriminoSprite);
             }
             case 5 -> {
-                gameBoard.setActiveTetrimino(new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite));
+                tetrimino = new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite);
             }
             case 6 -> {
-                gameBoard.setActiveTetrimino(new TTetrimino(xSpawn, ySpawn, TTetriminoSprite));
+                tetrimino = new TTetrimino(xSpawn, ySpawn, TTetriminoSprite);
             }
         }
+
+        return tetrimino;
+    }
+
+    public void spawnTetrimino() throws IOException {
+        gameBoard.setActiveTetrimino(createTerimino(nextTetriminoNum));
 
         gameBoard.add(gameBoard.getActiveTetrimino());
 
@@ -127,6 +134,10 @@ public class GameInstance extends JComponent implements KeyListener {
             gameBoard.setActiveTetrimino(null);
             playSFX(6);
         }
+    }
+
+    public void updateGameDisplay() {
+        gameDisplay.setQueuedTetrimino(createTerimino(nextTetriminoNum));
     }
 
     public void update() {
@@ -159,6 +170,8 @@ public class GameInstance extends JComponent implements KeyListener {
             } catch (IOException ignored) {
             }
         }
+
+        updateGameDisplay();
     }
 
     public void run() {
@@ -246,11 +259,23 @@ public class GameInstance extends JComponent implements KeyListener {
                         while (gameBoard.outOfVirBounds(activeTetrimino)) {
                             activeTetrimino.moveUp();
                         }
+                        int movesUp = 0;
+                        while (gameBoard.blocking(activeTetrimino)) {
+                            activeTetrimino.moveUp();
+                            movesUp++;
+                            if (movesUp > 3) {
+                                break;
+                            }
+                        }
                         while (gameBoard.outOfHorBounds(activeTetrimino)) {
                             if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
                                 activeTetrimino.moveLeft();
                             } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
                                 activeTetrimino.moveRight();
+                            }
+                            while (movesUp > 0) {
+                                activeTetrimino.moveDown();
+                                movesUp--;
                             }
                         }
 
@@ -281,11 +306,23 @@ public class GameInstance extends JComponent implements KeyListener {
                         while (gameBoard.outOfVirBounds(activeTetrimino)) {
                             activeTetrimino.moveUp();
                         }
+                        int movesUp = 0;
+                        while (gameBoard.blocking(activeTetrimino)) {
+                            activeTetrimino.moveUp();
+                            movesUp++;
+                            if (movesUp > 3) {
+                                break;
+                            }
+                        }
                         while (gameBoard.outOfHorBounds(activeTetrimino)) {
                             if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
                                 activeTetrimino.moveLeft();
                             } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
                                 activeTetrimino.moveRight();
+                            }
+                            while (movesUp > 0) {
+                                activeTetrimino.moveDown();
+                                movesUp--;
                             }
                         }
 
