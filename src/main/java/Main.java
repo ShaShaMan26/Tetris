@@ -19,7 +19,7 @@ public class Main {
         GameInstance gameInstance = new GameInstance(gameWindow);
 
         // 11 is max
-        gameInstance.setLevel(4);
+        gameInstance.setLevel(0);
 
         gameWindow.add(gameInstance);
 

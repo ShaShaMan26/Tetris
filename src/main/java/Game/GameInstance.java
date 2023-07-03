@@ -14,6 +14,9 @@ import java.util.Objects;
 
 public class GameInstance extends JComponent implements KeyListener {
     private int level = 0;
+    private int score = 0;
+    private int clearedLines = 0;
+    private int softDropNum = 0;
     private boolean hardDropEnabled = false;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
@@ -48,7 +51,10 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void levelUp() {
-        level++;
+        if (level <= 20) {
+            level++;
+        }
+        playSFX(2);
     }
 
     public void loadSprites() throws IOException {
@@ -129,9 +135,12 @@ public class GameInstance extends JComponent implements KeyListener {
         if (gameBoard.outOfVirBounds(tetrimino)
                 || gameBoard.blocking(tetrimino)) {
             tetrimino.moveUp();
+            softDropNum--;
         }
         if (preMoveYPos == tetrimino.getYPos()) {
+            score += softDropNum;
             gameBoard.setActiveTetrimino(null);
+            softDropNum = 0;
             playSFX(6);
         }
     }
@@ -143,12 +152,37 @@ public class GameInstance extends JComponent implements KeyListener {
     public void update() {
         TetriminoNode[] queuedClears = gameBoard.getQueuedClears();
 
-        if (queuedClears.length > 0) {
-            if (queuedClears.length == 4 * gameBoard.getBoardTileWidth()) {
-                playSFX(9);
+        int numOfRowClears = queuedClears.length / gameBoard.getBoardTileWidth();
+
+        if (numOfRowClears > 0) {
+            clearedLines += numOfRowClears;
+
+            if (level < 9) {
+                if ((clearedLines - (level*10)) % 10 == 0) {
+                    levelUp();
+                }
             } else {
+                if ((clearedLines - (level*20)) % 20 == 0) {
+                    levelUp();
+                }
+            }
+
+            int pointValue;
+
+            if (numOfRowClears == 4 * gameBoard.getBoardTileWidth()) {
+                pointValue = 1200;
+                playSFX(9);
+            } else if (numOfRowClears == 3) {
+                pointValue = 300;
+                playSFX(3);
+            } else if (numOfRowClears == 2) {
+                pointValue = 100;
+                playSFX(3);
+            } else {
+                pointValue = 40;
                 playSFX(3);
             }
+            score += pointValue * (level+1);
             for (int i = 5; i > 0; i--) {
                 for (TetriminoNode tetriminoNode : queuedClears) {
                     tetriminoNode.toggleDisplayed();
@@ -243,6 +277,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 }
                 if (keyCode == KeyEvent.VK_S
                         || keyCode == KeyEvent.VK_DOWN) {
+                    softDropNum++;
                     attemptToMoveDown(activeTetrimino);
                 }
                 if ((keyCode == KeyEvent.VK_W
