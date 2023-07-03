@@ -147,6 +147,9 @@ public class GameInstance extends JComponent implements KeyListener {
 
     public void updateGameDisplay() {
         gameDisplay.setQueuedTetrimino(createTerimino(nextTetriminoNum));
+        gameDisplay.setScore(score);
+        gameDisplay.setRowsCleared(clearedLines);
+        gameDisplay.setLevel(level);
     }
 
     public void update() {
@@ -196,6 +199,8 @@ public class GameInstance extends JComponent implements KeyListener {
             playSFX(7);
         }
 
+        updateGameDisplay();
+
         gameBoard.clearQueuedClears();
 
         if (gameBoard.getActiveTetrimino() == null) {
@@ -204,8 +209,6 @@ public class GameInstance extends JComponent implements KeyListener {
             } catch (IOException ignored) {
             }
         }
-
-        updateGameDisplay();
     }
 
     public void run() {
@@ -254,6 +257,9 @@ public class GameInstance extends JComponent implements KeyListener {
                 gameBoard = new GameBoard(gameWindow.getSize());
                 this.add(gameBoard);
                 this.add(gameDisplay);
+                score = 0;
+                clearedLines = 0;
+                level = 0;
             }
 
             if (activeTetrimino != null) {
