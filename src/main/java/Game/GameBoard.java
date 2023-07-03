@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class GameBoard extends JComponent {
     private final int boardWidth;
@@ -168,6 +167,19 @@ public class GameBoard extends JComponent {
 
         for (Component component : this.getComponents()) {
             component.paint(g);
+        }
+
+        if (activeTetrimino != null) {
+            int yPos = activeTetrimino.getYPos();
+
+            hardDrop(activeTetrimino);
+            float alpha = 0.4F;
+            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+            ((Graphics2D) g).setComposite(ac);
+
+            activeTetrimino.paint(g);
+
+            activeTetrimino.setYPos(yPos);
         }
     }
 }

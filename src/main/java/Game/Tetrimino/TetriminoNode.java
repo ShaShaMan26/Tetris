@@ -41,9 +41,8 @@ public class TetriminoNode extends Component {
         return colNum;
     }
 
-    public void setPos(int xPos, int yPos) {
+    public void setYPos(int yPos) {
         this.rowNum = yPos;
-        this.colNum = xPos;
     }
 
     public void setActive(boolean active) {

@@ -28,6 +28,16 @@ public abstract class Tetrimino extends Component {
         return xPos;
     }
 
+    public void setYPos(int yPos) {
+        int delta = this.yPos - yPos;
+
+        for (TetriminoNode tetriminoNode : tetriminoNodes) {
+            tetriminoNode.setYPos(tetriminoNode.getYPos() - delta);
+        }
+
+        this.yPos = yPos;
+    }
+
     public int getYPos() {
         return yPos;
     }
