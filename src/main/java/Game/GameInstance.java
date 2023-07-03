@@ -14,9 +14,9 @@ import java.util.Objects;
 public class GameInstance extends JComponent implements KeyListener {
     private int level = 0;
     private double fallTime = 0;
-    private int nextTetriminoNum = 0 * (int)(Math.random() * 7);
+    private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
-    private final GameBoard gameBoard;
+    private GameBoard gameBoard;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
             ZTetriminoSprite, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3;
     private final ArrayList<Integer> pressedKeys = new ArrayList<>();
@@ -165,6 +165,11 @@ public class GameInstance extends JComponent implements KeyListener {
         for (int keyCode : pressedKeys) {
             if (keyCode == KeyEvent.VK_ESCAPE) {
                 System.exit(1);
+            }
+            if (keyCode == KeyEvent.VK_R) {
+                this.remove(gameBoard);
+                gameBoard = new GameBoard(gameWindow.getSize());
+                this.add(gameBoard);
             }
 
             if (activeTetrimino != null) {
