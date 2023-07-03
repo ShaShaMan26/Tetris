@@ -19,6 +19,7 @@ public class GameInstance extends JComponent implements KeyListener {
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
     private GameBoard gameBoard;
+    private GameDisplay gameDisplay;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
             ZTetriminoSprite, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3;
     private AudioPlayer audioPlayer = new AudioPlayer();
@@ -31,7 +32,10 @@ public class GameInstance extends JComponent implements KeyListener {
         startBGM();
 
         gameBoard = new GameBoard(gameWindow.getSize());
+        gameDisplay = new GameDisplay(gameWindow.getSize(), gameBoard.getTileSize());
+
         this.add(gameBoard);
+        this.add(gameDisplay);
 
         gameWindow.addKeyListener(this);
         requestFocus();
@@ -199,8 +203,10 @@ public class GameInstance extends JComponent implements KeyListener {
             }
             if (keyCode == KeyEvent.VK_R) {
                 this.remove(gameBoard);
+                this.remove(gameDisplay);
                 gameBoard = new GameBoard(gameWindow.getSize());
                 this.add(gameBoard);
+                this.add(gameDisplay);
             }
 
             if (activeTetrimino != null) {

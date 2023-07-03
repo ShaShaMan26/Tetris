@@ -67,6 +67,10 @@ public class GameBoard extends JComponent {
         return boardWidth / tileSize;
     }
 
+    public int getTileSize() {
+        return tileSize;
+    }
+
     public void clearQueuedClears() {
         TetriminoNode[] nodesToBeCleared = getQueuedClears();
 
