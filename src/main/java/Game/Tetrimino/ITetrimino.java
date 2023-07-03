@@ -1,5 +1,6 @@
 package Game.Tetrimino;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ITetrimino extends Tetrimino{
@@ -18,10 +19,18 @@ public class ITetrimino extends Tetrimino{
     @Override
     public void setNodeSprites() {
         TetriminoNode[] tetriminoNodes = getTetriminoNodes();
-        tetriminoNodes[0].setSprite(sprite1);
-        tetriminoNodes[1].setSprite(sprite2);
-        tetriminoNodes[2].setSprite(sprite2);
-        tetriminoNodes[3].setSprite(sprite3);
+
+        if (getRotation() == 0 || getRotation() == 2) {
+            tetriminoNodes[0].setSprite(sprite1);
+            tetriminoNodes[1].setSprite(sprite2);
+            tetriminoNodes[2].setSprite(sprite2);
+            tetriminoNodes[3].setSprite(sprite3);
+        } else {
+            tetriminoNodes[0].setSprite(rotate(sprite1));
+            tetriminoNodes[1].setSprite(rotate(sprite2));
+            tetriminoNodes[2].setSprite(rotate(sprite2));
+            tetriminoNodes[3].setSprite(rotate(sprite3));
+        }
     }
 
     @Override
@@ -48,5 +57,19 @@ public class ITetrimino extends Tetrimino{
 
         setTetriminoNodes(tetriminoNodes);
         setNodeSprites();
+    }
+
+    // stolen from https://stackoverflow.com/questions/37758061/rotate-a-buffered-image-in-java
+    public static BufferedImage rotate(BufferedImage bimg) {
+
+        int w = bimg.getWidth();
+        int h = bimg.getHeight();
+
+        BufferedImage rotated = new BufferedImage(w, h, bimg.getType());
+        Graphics2D graphic = rotated.createGraphics();
+        graphic.rotate(Math.toRadians(90), w/2, h/2);
+        graphic.drawImage(bimg, null, 0, 0);
+        graphic.dispose();
+        return rotated;
     }
 }

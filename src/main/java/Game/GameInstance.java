@@ -14,7 +14,7 @@ import java.util.Objects;
 public class GameInstance extends JComponent implements KeyListener {
     private int level = 0;
     private double fallTime = 0;
-    private int nextTetriminoNum = (int)(Math.random() * 7);
+    private int nextTetriminoNum = 0 * (int)(Math.random() * 7);
     private final JFrame gameWindow;
     private final GameBoard gameBoard;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
@@ -112,7 +112,6 @@ public class GameInstance extends JComponent implements KeyListener {
                 try {
                     Thread.sleep(i * 100L);
                 } catch (InterruptedException ignored) {
-
                 }
             }
         }

@@ -14,7 +14,6 @@ public class GameBoard extends JComponent {
     private final int boardHeight;
     private final int tileSize;
     private Tetrimino activeTetrimino;
-    private Tetrimino ghostTetrimino;
 
     public GameBoard(Dimension displayDimension) {
         tileSize = displayDimension.height / 20;
@@ -38,9 +37,12 @@ public class GameBoard extends JComponent {
 
         for (Component component : this.getComponents()) {
             if (component instanceof Tetrimino
-                    && component != activeTetrimino
-                    && component != ghostTetrimino) {
-                tetriminoNodes.addAll(List.of(((Tetrimino) component).getTetriminoNodes()));
+                    && component != activeTetrimino) {
+                for (TetriminoNode tetriminoNode : ((Tetrimino) component).getTetriminoNodes()) {
+                    if (tetriminoNode.getActive()) {
+                        tetriminoNodes.add(tetriminoNode);
+                    }
+                }
             }
         }
 
