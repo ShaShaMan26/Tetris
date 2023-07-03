@@ -13,6 +13,7 @@ public class GameBoard extends JComponent {
     private final int boardHeight;
     private final int tileSize;
     private Tetrimino activeTetrimino;
+    private boolean ghostPieceEnabled = false;
 
     public GameBoard(Dimension displayDimension) {
         tileSize = displayDimension.height / 20;
@@ -29,6 +30,10 @@ public class GameBoard extends JComponent {
 
     public Tetrimino getActiveTetrimino() {
         return activeTetrimino;
+    }
+
+    public void toggleGhostPiece() {
+        ghostPieceEnabled = !ghostPieceEnabled;
     }
 
     public TetriminoNode[] getTetriminoNodes() {
@@ -169,7 +174,7 @@ public class GameBoard extends JComponent {
             component.paint(g);
         }
 
-        if (activeTetrimino != null) {
+        if (ghostPieceEnabled && activeTetrimino != null) {
             int yPos = activeTetrimino.getYPos();
 
             hardDrop(activeTetrimino);

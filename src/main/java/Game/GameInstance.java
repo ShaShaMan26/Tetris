@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public class GameInstance extends JComponent implements KeyListener {
     private int level = 0;
+    private boolean hardDropEnabled = false;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
@@ -52,6 +53,14 @@ public class GameInstance extends JComponent implements KeyListener {
         ITetriminoSprite1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tetriminos/I_Tetrimino_Sprite_1.png")));
         ITetriminoSprite2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tetriminos/I_Tetrimino_Sprite_2.png")));
         ITetriminoSprite3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Tetriminos/I_Tetrimino_Sprite_3.png")));
+    }
+
+    public void toggleHardDrop() {
+        hardDropEnabled = !hardDropEnabled;
+    }
+
+    public void toggleGhostPiece() {
+        gameBoard.toggleGhostPiece();
     }
 
     public void spawnTetrimino() throws IOException {
@@ -193,8 +202,9 @@ public class GameInstance extends JComponent implements KeyListener {
                         || keyCode == KeyEvent.VK_DOWN) {
                     attemptToMoveDown(activeTetrimino);
                 }
-                if (keyCode == KeyEvent.VK_W
-                        || keyCode == KeyEvent.VK_UP) {
+                if ((keyCode == KeyEvent.VK_W
+                        || keyCode == KeyEvent.VK_UP)
+                        && hardDropEnabled) {
                     gameBoard.hardDrop(activeTetrimino);
                     gameBoard.setActiveTetrimino(null);
                 }
@@ -264,6 +274,12 @@ public class GameInstance extends JComponent implements KeyListener {
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
+                }
+                if (keyCode == KeyEvent.VK_1) {
+                    toggleHardDrop();
+                }
+                if (keyCode == KeyEvent.VK_2) {
+                    toggleGhostPiece();
                 }
             }
         }
