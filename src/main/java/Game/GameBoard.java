@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class GameBoard extends JComponent {
     private final int boardWidth;
@@ -49,23 +50,42 @@ public class GameBoard extends JComponent {
         return finalTetriminos;
     }
 
-    public int getBoardHeight() {
+    public TetriminoNode[] getTetriminoNodes() {
+        ArrayList<TetriminoNode> tetriminoNodes = new ArrayList<>();
+
+        for (Component component : this.getComponents()) {
+            if (component instanceof Tetrimino
+                    && component != activeTetrimino) {
+                tetriminoNodes.addAll(List.of(((Tetrimino) component).getTetriminoNodes()));
+            }
+        }
+
+        TetriminoNode[] finalTetriminoNodes = new TetriminoNode[tetriminoNodes.size()];
+
+        for (int i = 0; i < tetriminoNodes.size(); i++) {
+            finalTetriminoNodes[i] = tetriminoNodes.get(i);
+        }
+
+        return finalTetriminoNodes;
+    }
+
+    public int getBoardTileHeight() {
         return boardHeight / tileSize;
     }
 
-    public int getBoardWidth() {
+    public int getBoardTileWidth() {
         return boardWidth / tileSize;
     }
 
-    public void clearQueuedRows() {
+    public void clearQueuedClears() {
         TetriminoNode[] nodesToBeCleared = getQueuedClears();
 
         for (TetriminoNode tetriminoNode : nodesToBeCleared) {
             tetriminoNode.setActive(false);
         }
 
-        for (int row = getBoardHeight()-1; row > -1; row--) {
-            if (getNodesAt(row).length == 0) {
+        for (int row = getBoardTileHeight()-1; row > -1; row--) {
+            if (getNodesOf(row).length == 0) {
                 for (Tetrimino tetrimino : getTetriminos()) {
                     for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
                         if (tetriminoNode.getYPos() < row) {
@@ -80,10 +100,10 @@ public class GameBoard extends JComponent {
     public TetriminoNode[] getQueuedClears() {
         ArrayList<TetriminoNode> nodesToBeCleared = new ArrayList<>();
 
-        for (int row = 0; row < getBoardHeight(); row++) {
-            TetriminoNode[] nodesAtRow = getNodesAt(row);
+        for (int row = 0; row < getBoardTileHeight(); row++) {
+            TetriminoNode[] nodesAtRow = getNodesOf(row);
 
-            if (nodesAtRow.length == getBoardWidth()) {
+            if (nodesAtRow.length == getBoardTileWidth()) {
                 nodesToBeCleared.addAll(Arrays.stream(nodesAtRow).toList());
             }
         }
@@ -97,7 +117,7 @@ public class GameBoard extends JComponent {
         return finalNodesToBeCleared;
     }
 
-    public TetriminoNode[] getNodesAt(int row) {
+    public TetriminoNode[] getNodesOf(int row) {
         ArrayList<TetriminoNode> nodesInRow = new ArrayList<>();
 
         for (Tetrimino tetrimino : getTetriminos()) {
@@ -117,34 +137,20 @@ public class GameBoard extends JComponent {
         return finalNodesInRow;
     }
 
-    public boolean isTetriminoBelow(Tetrimino tetrimino) {
-        for (Component component : this.getComponents()) {
-            if (component instanceof Tetrimino
-                    && component != tetrimino) {
-                for (TetriminoNode tetriminoComponentNode : ((Tetrimino) component).getTetriminoNodes()) {
-                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                        if (tetriminoNode.getXPos() == tetriminoComponentNode.getXPos()
-                                && tetriminoComponentNode.getYPos() == tetriminoNode.getYPos() + 1) {
-                            return true;
-                        }
-                    }
-                }
-            }
+    public void hardDrop(Tetrimino tetrimino) {
+        while (!outOfVirBounds(tetrimino)
+                && !blocking(tetrimino)) {
+            tetrimino.moveDown();
         }
-        return false;
+        tetrimino.moveUp();
     }
 
-    public boolean isTetriminoBlocking(Tetrimino tetrimino) {
-        for (Component component : this.getComponents()) {
-            if (component instanceof Tetrimino
-                    && component != tetrimino) {
-                for (TetriminoNode tetriminoComponentNode : ((Tetrimino) component).getTetriminoNodes()) {
-                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                        if (tetriminoNode.getYPos() == tetriminoComponentNode.getYPos()
-                                && tetriminoComponentNode.getXPos() == tetriminoNode.getXPos()) {
-                            return true;
-                        }
-                    }
+    public boolean blocking(Tetrimino activeTetrimino) {
+        for (TetriminoNode activeTetriminoNode : activeTetrimino.getTetriminoNodes()) {
+            for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+                if (activeTetriminoNode.getYPos() == tetriminoNode.getYPos()
+                        && activeTetriminoNode.getXPos() == tetriminoNode.getXPos()) {
+                    return true;
                 }
             }
         }
@@ -152,9 +158,9 @@ public class GameBoard extends JComponent {
         return false;
     }
 
-    public boolean isTetriminoOutOfBounds(Tetrimino tetrimino) {
+    public boolean outOfHorBounds(Tetrimino tetrimino) {
         for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-            if (tetriminoNode.getXPos() > getBoardWidth() - 1 || tetriminoNode.getXPos() < 0) {
+            if (tetriminoNode.getXPos() > getBoardTileWidth() - 1 || tetriminoNode.getXPos() < 0) {
                 return true;
             }
         }
@@ -162,72 +168,14 @@ public class GameBoard extends JComponent {
         return false;
     }
 
-    public boolean isTetriminoToTheRightOf(Tetrimino tetrimino) {
-        for (Component component : this.getComponents()) {
-            if (component instanceof Tetrimino
-                    && component != tetrimino) {
-                for (TetriminoNode tetriminoComponentNode : ((Tetrimino) component).getTetriminoNodes()) {
-                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                        if (tetriminoNode.getYPos() == tetriminoComponentNode.getYPos()
-                                && tetriminoComponentNode.getXPos() == tetriminoNode.getXPos() + 1) {
-                            return true;
-                        }
-                    }
-                }
+    public boolean outOfVirBounds(Tetrimino tetrimino) {
+        for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
+            if (tetriminoNode.getYPos() > getBoardTileHeight() - 1) {
+                return true;
             }
         }
+
         return false;
-    }
-
-    public boolean isTetriminoToTheLeftOf(Tetrimino tetrimino) {
-        for (Component component : this.getComponents()) {
-            if (component instanceof Tetrimino
-                    && component != tetrimino) {
-                for (TetriminoNode tetriminoComponentNode : ((Tetrimino) component).getTetriminoNodes()) {
-                    for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-                        if (tetriminoNode.getYPos() == tetriminoComponentNode.getYPos()
-                                && tetriminoComponentNode.getXPos() == tetriminoNode.getXPos() - 1) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean aboveVirBound(Tetrimino tetrimino) {
-        for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-            if (tetriminoNode.getYPos() >= getBoardHeight() - 1) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean leftOfHorBounds(Tetrimino tetrimino) {
-        for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-            if (tetriminoNode.getXPos() >= getBoardWidth() - 1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean rightOfHorBounds(Tetrimino tetrimino) {
-        for (TetriminoNode tetriminoNode : tetrimino.getTetriminoNodes()) {
-            if (tetriminoNode.getXPos() < 1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void hardDrop(Tetrimino tetrimino) {
-        while (aboveVirBound(tetrimino) && !isTetriminoBelow(tetrimino)) {
-            tetrimino.moveDown();
-        }
     }
 
     public void paintComponent(Graphics g) {

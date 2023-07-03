@@ -1,7 +1,6 @@
 package Game.Tetrimino;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class ZTetrimino extends Tetrimino{
 

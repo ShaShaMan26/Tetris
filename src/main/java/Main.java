@@ -1,7 +1,6 @@
 import Game.GameInstance;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 
 public class Main {
@@ -18,10 +17,11 @@ public class Main {
         gameWindow.setVisible(true);
 
         GameInstance gameInstance = new GameInstance(gameWindow);
-        gameWindow.add(gameInstance);
 
         // 11 is max
-        gameInstance.setLevel(2);
+        gameInstance.setLevel(4);
+
+        gameWindow.add(gameInstance);
 
         gameInstance.run();
     }
