@@ -126,6 +126,31 @@ public class GameInstance extends JComponent implements KeyListener {
         gameBoard.add(gameBoard.getActiveTetrimino());
 
         nextTetriminoNum = (int)(Math.random() * 7);
+
+        checkForGameOver();
+    }
+
+    public void checkForGameOver() {
+        if (gameBoard.getNodesOf(1).length > gameBoard.getBoardTileWidth()) {
+            try {
+                playSFX(1);
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            reset();
+        }
+    }
+
+    public void reset() {
+        this.remove(gameBoard);
+        this.remove(gameDisplay);
+        gameBoard = new GameBoard(gameWindow.getSize());
+        this.add(gameBoard);
+        this.add(gameDisplay);
+        score = 0;
+        clearedLines = 0;
+        level = 0;
     }
 
     public void attemptToMoveDown(Tetrimino tetrimino) {
@@ -251,14 +276,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 System.exit(1);
             }
             if (keyCode == KeyEvent.VK_R) {
-                this.remove(gameBoard);
-                this.remove(gameDisplay);
-                gameBoard = new GameBoard(gameWindow.getSize());
-                this.add(gameBoard);
-                this.add(gameDisplay);
-                score = 0;
-                clearedLines = 0;
-                level = 0;
+                reset();
             }
 
             if (activeTetrimino != null) {
