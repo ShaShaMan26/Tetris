@@ -15,7 +15,7 @@ public class GameDisplay extends JComponent {
     private final int TILE_SIZE, boardLeftSideXPos, boardRightSideXPos;
     private int score, rowsCleared, level;
     private final Dimension DISPLAY_DIMENSION;
-    private BufferedImage borderTileRight, borderTileLeft, queueBox, levelBox, linesBox;
+    private BufferedImage borderTileRight, borderTileLeft, queueBox, levelBox, linesBox, scoreBox;
     private Tetrimino queuedTetrimino;
     private final Font font;
 
@@ -50,13 +50,14 @@ public class GameDisplay extends JComponent {
             queueBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/next_box.png")));
             levelBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/level_box.png")));
             linesBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/lines_box.png")));
+            scoreBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/score_box.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void setQueuedTetrimino(Tetrimino queuedTetrimino) {
-        queuedTetrimino.setXPos((boardRightSideXPos) / TILE_SIZE + 4);
+        queuedTetrimino.setXPos((boardLeftSideXPos) / TILE_SIZE - 4);
         queuedTetrimino.setYPos(2);
 
         this.queuedTetrimino = queuedTetrimino;
@@ -90,9 +91,9 @@ public class GameDisplay extends JComponent {
 
     public void paintQueueBox(Graphics g) {
         int queueBoxSize = (int)(TILE_SIZE*4.5);
-        int xOffset = TILE_SIZE*2;
-        int yOffset = (int)(TILE_SIZE*.25);
-        g.drawImage(queueBox, boardRightSideXPos + xOffset, yOffset, queueBoxSize, queueBoxSize, null);
+        int xOffset = (int)(TILE_SIZE*1.5);
+        int yOffset = (int)(TILE_SIZE*.65);
+        g.drawImage(queueBox, boardLeftSideXPos - queueBoxSize - xOffset, yOffset, queueBoxSize, queueBoxSize, null);
 
         if (queuedTetrimino != null) {
             queuedTetrimino.paint(g);
@@ -100,21 +101,43 @@ public class GameDisplay extends JComponent {
     }
 
     public void paintScoreBox(Graphics g) {
+        int boxSize = (int)(7.625 * TILE_SIZE);
+        int xOffset = boardRightSideXPos + (int)(TILE_SIZE*1.5);
+
+        int textOffset = (int)(TILE_SIZE*5.35);
+        if (score >= 1000000) {
+            textOffset -= TILE_SIZE*4.95;
+        } else if (score >= 100000) {
+            textOffset -= TILE_SIZE*4.5;
+        } else if (score >= 10000) {
+            textOffset -= TILE_SIZE*4;
+        } else if (score >= 1000) {
+            textOffset -= TILE_SIZE*3;
+        } else if (score >= 100) {
+            textOffset -= TILE_SIZE*2;
+        } else if (score >= 10) {
+            textOffset -= TILE_SIZE;
+        }
+
+        int yOffset = (int)(TILE_SIZE*.25);
+
+        g.drawImage(scoreBox, xOffset, yOffset, boxSize, boxSize, null);
+
         g.setFont(font);
-        g.setColor(Color.WHITE);
-        g.drawString(""+score, 100, 100);
+        g.setColor(Color.BLACK);
+        g.drawString(""+score, xOffset + textOffset, yOffset + (int)(TILE_SIZE*3.25));
     }
 
     public void paintLevelBox(Graphics g) {
         int boxSize = (int)(5.75 * TILE_SIZE);
-        int xOffset = boardLeftSideXPos - TILE_SIZE*2 - boxSize;
+        int xOffset = boardRightSideXPos + (int)(TILE_SIZE*3.375);
 
         int textOffset = (int)(TILE_SIZE*3.5);
         if (level >= 10) {
             textOffset -= TILE_SIZE;
         }
 
-        int yOffset = TILE_SIZE;
+        int yOffset = (int)(TILE_SIZE*4.3);
 
         g.drawImage(levelBox, xOffset, yOffset, boxSize, boxSize, null);
 
@@ -125,7 +148,7 @@ public class GameDisplay extends JComponent {
 
     public void paintLinesBox(Graphics g) {
         int boxSize = (int)(5.75 * TILE_SIZE);
-        int xOffset = boardLeftSideXPos - TILE_SIZE*2 - boxSize;
+        int xOffset = boardRightSideXPos + (int)(TILE_SIZE*3.375);
 
         int textOffset = (int)(TILE_SIZE*3.5);
         if (rowsCleared >= 1000) {
@@ -136,7 +159,7 @@ public class GameDisplay extends JComponent {
             textOffset -= TILE_SIZE;
         }
 
-        int yOffset = TILE_SIZE*5;
+        int yOffset = (int)(TILE_SIZE*7.35);
 
         g.drawImage(linesBox, xOffset, yOffset, boxSize, boxSize, null);
 
@@ -152,10 +175,10 @@ public class GameDisplay extends JComponent {
 
         paintQueueBox(g);
 
-        paintScoreBox(g);
-
         paintLevelBox(g);
 
         paintLinesBox(g);
+
+        paintScoreBox(g);
     }
 }
