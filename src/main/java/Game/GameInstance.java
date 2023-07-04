@@ -25,7 +25,7 @@ public class GameInstance extends JComponent implements KeyListener {
     private GameDisplay gameDisplay;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
             ZTetriminoSprite, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3;
-    private AudioPlayer audioPlayer = new AudioPlayer();
+    private final AudioPlayer audioPlayer = new AudioPlayer();
     private final ArrayList<Integer> pressedKeys = new ArrayList<>();
 
     public GameInstance(JFrame gameWindow) throws IOException {
@@ -94,27 +94,13 @@ public class GameInstance extends JComponent implements KeyListener {
         Tetrimino tetrimino = null;
 
         switch (tetriminoNum) {
-            case 0 -> {
-                tetrimino = new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3);
-            }
-            case 1 -> {
-                tetrimino = new OTetrimino(xSpawn, ySpawn, OTetriminoSprite);
-            }
-            case 2 -> {
-                tetrimino = new JTetrimino(xSpawn, ySpawn, JTetriminoSprite);
-            }
-            case 3 -> {
-                tetrimino = new LTetrimino(xSpawn, ySpawn, LTetriminoSprite);
-            }
-            case 4 -> {
-                tetrimino = new STetrimino(xSpawn, ySpawn, STetriminoSprite);
-            }
-            case 5 -> {
-                tetrimino = new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite);
-            }
-            case 6 -> {
-                tetrimino = new TTetrimino(xSpawn, ySpawn, TTetriminoSprite);
-            }
+            case 0 -> tetrimino = new ITetrimino(xSpawn, ySpawn, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3);
+            case 1 -> tetrimino = new OTetrimino(xSpawn, ySpawn, OTetriminoSprite);
+            case 2 -> tetrimino = new JTetrimino(xSpawn, ySpawn, JTetriminoSprite);
+            case 3 -> tetrimino = new LTetrimino(xSpawn, ySpawn, LTetriminoSprite);
+            case 4 -> tetrimino = new STetrimino(xSpawn, ySpawn, STetriminoSprite);
+            case 5 -> tetrimino = new ZTetrimino(xSpawn, ySpawn, ZTetriminoSprite);
+            case 6 -> tetrimino = new TTetrimino(xSpawn, ySpawn, TTetriminoSprite);
         }
 
         return tetrimino;
