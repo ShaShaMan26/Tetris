@@ -135,7 +135,6 @@ public class GameInstance extends JComponent implements KeyListener {
         if (gameBoard.outOfVirBounds(tetrimino)
                 || gameBoard.blocking(tetrimino)) {
             tetrimino.moveUp();
-            softDropNum--;
         }
         if (preMoveYPos == tetrimino.getYPos()) {
             score += softDropNum;
@@ -172,7 +171,7 @@ public class GameInstance extends JComponent implements KeyListener {
 
             int pointValue;
 
-            if (numOfRowClears == 4 * gameBoard.getBoardTileWidth()) {
+            if (numOfRowClears == 4) {
                 pointValue = 1200;
                 playSFX(9);
             } else if (numOfRowClears == 3) {
@@ -283,13 +282,13 @@ public class GameInstance extends JComponent implements KeyListener {
                 }
                 if (keyCode == KeyEvent.VK_S
                         || keyCode == KeyEvent.VK_DOWN) {
-                    softDropNum++;
                     attemptToMoveDown(activeTetrimino);
+                    softDropNum++;
                 }
                 if ((keyCode == KeyEvent.VK_W
                         || keyCode == KeyEvent.VK_UP)
                         && hardDropEnabled) {
-                    gameBoard.hardDrop(activeTetrimino);
+                    score += gameBoard.hardDrop(activeTetrimino);
                     gameBoard.setActiveTetrimino(null);
                     playSFX(6);
                 }
@@ -398,6 +397,10 @@ public class GameInstance extends JComponent implements KeyListener {
 
     @Override
     public synchronized void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_S
+                || e.getKeyCode() == KeyEvent.VK_DOWN) {
+            softDropNum = 0;
+        }
         pressedKeys.remove((Integer) e.getKeyCode());
     }
 }

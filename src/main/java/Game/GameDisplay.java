@@ -89,8 +89,8 @@ public class GameDisplay extends JComponent {
     }
 
     public void paintQueueBox(Graphics g) {
-        int queueBoxSize = TILE_SIZE*5;
-        int xOffset = TILE_SIZE + (int)(TILE_SIZE*.6);
+        int queueBoxSize = (int)(TILE_SIZE*4.5);
+        int xOffset = TILE_SIZE*2;
         int yOffset = (int)(TILE_SIZE*.25);
         g.drawImage(queueBox, boardRightSideXPos + xOffset, yOffset, queueBoxSize, queueBoxSize, null);
 
@@ -108,13 +108,41 @@ public class GameDisplay extends JComponent {
     public void paintLevelBox(Graphics g) {
         int boxSize = (int)(5.75 * TILE_SIZE);
         int xOffset = boardLeftSideXPos - TILE_SIZE*2 - boxSize;
+
+        int textOffset = (int)(TILE_SIZE*3.5);
+        if (level >= 10) {
+            textOffset -= TILE_SIZE;
+        }
+
         int yOffset = TILE_SIZE;
 
         g.drawImage(levelBox, xOffset, yOffset, boxSize, boxSize, null);
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+level, xOffset+ (int)(TILE_SIZE*3.5), yOffset + (int)(TILE_SIZE*2.25));
+        g.drawString(""+level, xOffset + textOffset, yOffset + (int)(TILE_SIZE*2.25));
+    }
+
+    public void paintLinesBox(Graphics g) {
+        int boxSize = (int)(5.75 * TILE_SIZE);
+        int xOffset = boardLeftSideXPos - TILE_SIZE*2 - boxSize;
+
+        int textOffset = (int)(TILE_SIZE*3.5);
+        if (rowsCleared >= 1000) {
+            textOffset -= TILE_SIZE*3;
+        } else if (rowsCleared >= 100) {
+            textOffset -= TILE_SIZE*2;
+        } else if (rowsCleared >= 10) {
+            textOffset -= TILE_SIZE;
+        }
+
+        int yOffset = TILE_SIZE*5;
+
+        g.drawImage(linesBox, xOffset, yOffset, boxSize, boxSize, null);
+
+        g.setFont(font);
+        g.setColor(Color.BLACK);
+        g.drawString(""+rowsCleared, xOffset + textOffset, yOffset + (int)(TILE_SIZE*2.25));
     }
 
     public void paintComponent(Graphics g) {
@@ -127,5 +155,7 @@ public class GameDisplay extends JComponent {
         paintScoreBox(g);
 
         paintLevelBox(g);
+
+        paintLinesBox(g);
     }
 }

@@ -127,12 +127,17 @@ public class GameBoard extends JComponent {
         return finalNodesInRow;
     }
 
-    public void hardDrop(Tetrimino tetrimino) {
+    public int hardDrop(Tetrimino tetrimino) {
+        int fallDistance = -2;
+
         while (!outOfVirBounds(tetrimino)
                 && !blocking(tetrimino)) {
             tetrimino.moveDown();
+            fallDistance += 2;
         }
         tetrimino.moveUp();
+
+        return fallDistance;
     }
 
     public boolean blocking(Tetrimino activeTetrimino) {
@@ -174,10 +179,6 @@ public class GameBoard extends JComponent {
         g.setColor(new Color(248,248,248));
         g.fillRect(0, 0, boardWidth, boardHeight);
 
-        for (Component component : this.getComponents()) {
-            component.paint(g);
-        }
-
         if (ghostPieceEnabled && activeTetrimino != null) {
             int yPos = activeTetrimino.getYPos();
 
@@ -189,6 +190,14 @@ public class GameBoard extends JComponent {
             activeTetrimino.paint(g);
 
             activeTetrimino.setYPos(yPos);
+
+            alpha = 1;
+            ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+            ((Graphics2D) g).setComposite(ac);
+        }
+
+        for (Component component : this.getComponents()) {
+            component.paint(g);
         }
     }
 }
