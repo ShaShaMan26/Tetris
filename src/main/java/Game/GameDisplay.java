@@ -90,8 +90,8 @@ public class GameDisplay extends JComponent {
     }
 
     public void paintQueueBox(Graphics g) {
-        int queueBoxSize = (int)(TILE_SIZE*4.5);
-        int xOffset = (int)(TILE_SIZE*1.5);
+        int queueBoxSize = (int)(TILE_SIZE*4.75);
+        int xOffset = (int)(TILE_SIZE*1.4);
         int yOffset = (int)(TILE_SIZE*.65);
         g.drawImage(queueBox, boardLeftSideXPos - queueBoxSize - xOffset, yOffset, queueBoxSize, queueBoxSize, null);
 
