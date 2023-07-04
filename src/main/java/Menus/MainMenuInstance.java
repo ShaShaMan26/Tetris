@@ -30,8 +30,10 @@ public class MainMenuInstance extends JComponent implements KeyListener {
     @Override
     public synchronized void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE -> System.exit(69);
+            case KeyEvent.VK_ESCAPE -> instance.setWantsExit(true);
             case KeyEvent.VK_SPACE -> instance.setWantsGame(true);
+            case KeyEvent.VK_1 -> instance.toggleHardDrop();
+            case KeyEvent.VK_2 -> instance.toggleGhost();
         }
     }
 

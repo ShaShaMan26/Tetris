@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GameInstance extends JComponent implements KeyListener {
-    private Instance instance;
+    private final Instance instance;
     private int level = 0, score = 0, clearedLines = 0, softDropNum = 0, extraClearedLines = 0;
-    private boolean hardDropEnabled = false, running = true;
+    private boolean running = true;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
     private GameBoard gameBoard;
-    private GameDisplay gameDisplay;
+    private final GameDisplay gameDisplay;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
             ZTetriminoSprite, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3;
     private final AudioPlayer audioPlayer = new AudioPlayer();
@@ -33,7 +33,7 @@ public class GameInstance extends JComponent implements KeyListener {
         this.gameWindow = instance.getGameWindow();
         this.setSize(gameWindow.getSize());
 
-        gameBoard = new GameBoard(gameWindow.getSize());
+        gameBoard = new GameBoard(gameWindow.getSize(), instance.isGhostEnabled());
         gameDisplay = new GameDisplay(gameWindow.getSize(), gameBoard.getTileSize());
 
         this.add(gameBoard);
@@ -64,14 +64,6 @@ public class GameInstance extends JComponent implements KeyListener {
     public void playSFX(int i) {
         audioPlayer.setClip(i, false);
         audioPlayer.play();
-    }
-
-    public void toggleHardDrop() {
-        hardDropEnabled = !hardDropEnabled;
-    }
-
-    public void toggleGhostPiece() {
-        gameBoard.toggleGhostPiece();
     }
 
     public Tetrimino createTerimino(int tetriminoNum) {
@@ -123,7 +115,7 @@ public class GameInstance extends JComponent implements KeyListener {
     public void reset() {
         this.remove(gameBoard);
         this.remove(gameDisplay);
-        gameBoard = new GameBoard(gameWindow.getSize());
+        gameBoard = new GameBoard(gameWindow.getSize(), instance.isGhostEnabled());
         this.add(gameBoard);
         this.add(gameDisplay);
         score = 0;
@@ -297,7 +289,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 }
                 if ((keyCode == KeyEvent.VK_W
                         || keyCode == KeyEvent.VK_UP)
-                        && hardDropEnabled) {
+                        && instance.isHardDropEnabled()) {
                     score += gameBoard.hardDrop(activeTetrimino);
                     gameBoard.setActiveTetrimino(null);
                     playSFX(6);
@@ -394,12 +386,6 @@ public class GameInstance extends JComponent implements KeyListener {
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                }
-                if (keyCode == KeyEvent.VK_1) {
-                    toggleHardDrop();
-                }
-                if (keyCode == KeyEvent.VK_2) {
-                    toggleGhostPiece();
                 }
             }
         }
