@@ -7,7 +7,7 @@ import java.net.URL;
 public class AudioPlayer {
 
     Clip clip;
-    URL soundURL[] = new URL[10];
+    URL[] soundURL = new URL[11];
 
     public AudioPlayer() {
         soundURL[0] = getClass().getResource("/audio/game_bgm.wav");
@@ -20,6 +20,7 @@ public class AudioPlayer {
         soundURL[7] = getClass().getResource("/audio/piece_landing_after_falling.wav");
         soundURL[8] = getClass().getResource("/audio/rotate_piece.wav");
         soundURL[9] = getClass().getResource("/audio/tetris_clear.wav");
+        soundURL[10] = getClass().getResource("/audio/game_over_message.wav");
     }
 
     public void setClip(int i) {
