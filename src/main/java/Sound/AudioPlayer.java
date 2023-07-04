@@ -3,10 +3,12 @@ package Sound;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class AudioPlayer {
 
     Clip clip;
+    ArrayList<Clip> loopingClips = new ArrayList<>();
     URL[] soundURL = new URL[11];
 
     public AudioPlayer() {
@@ -23,25 +25,28 @@ public class AudioPlayer {
         soundURL[10] = getClass().getResource("/audio/game_over_message.wav");
     }
 
-    public void setClip(int i) {
+    public void setClip(int i, boolean looping) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+            if (looping) {
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                loopingClips.add(clip);
+            }
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+
     public void play() {
         clip.start();
     }
 
-    public void loop() {
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
-    }
-
-    public void stop() {
-        clip.stop();
+    public void stopLoopingClips() {
+        for (Clip clip : loopingClips) {
+            clip.stop();
+        }
     }
 }

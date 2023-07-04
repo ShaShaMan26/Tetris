@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Tetrimino.*;
+import Main.Instance;
 import Sound.AudioPlayer;
 
 import javax.imageio.ImageIO;
@@ -13,11 +14,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GameInstance extends JComponent implements KeyListener {
-    private int level = 0;
-    private int score = 0;
-    private int clearedLines = 0;
-    private int softDropNum = 0;
-    private boolean hardDropEnabled = false;
+    private Instance instance;
+    private int level = 0, score = 0, clearedLines = 0, softDropNum = 0, extraClearedLines = 0;
+    private boolean hardDropEnabled = false, running = true;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
@@ -28,33 +27,21 @@ public class GameInstance extends JComponent implements KeyListener {
     private final AudioPlayer audioPlayer = new AudioPlayer();
     private final ArrayList<Integer> pressedKeys = new ArrayList<>();
 
-    public GameInstance(JFrame gameWindow) throws IOException {
-        this.gameWindow = gameWindow;
-        this.setSize(gameWindow.getSize());
+    public GameInstance(Instance instance) throws IOException {
+        this.instance = instance;
 
-        startBGM();
+        this.gameWindow = instance.getGameWindow();
+        this.setSize(gameWindow.getSize());
 
         gameBoard = new GameBoard(gameWindow.getSize());
         gameDisplay = new GameDisplay(gameWindow.getSize(), gameBoard.getTileSize());
 
         this.add(gameBoard);
         this.add(gameDisplay);
-
-        gameWindow.addKeyListener(this);
-        requestFocus();
-
-        loadSprites();
     }
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public void levelUp() {
-        if (level <= 20) {
-            level++;
-        }
-        playSFX(2);
     }
 
     public void loadSprites() throws IOException {
@@ -70,13 +57,12 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void startBGM() {
-        audioPlayer.setClip(0);
+        audioPlayer.setClip(0, true);
         audioPlayer.play();
-        audioPlayer.loop();
     }
 
     public void playSFX(int i) {
-        audioPlayer.setClip(i);
+        audioPlayer.setClip(i, false);
         audioPlayer.play();
     }
 
@@ -122,12 +108,14 @@ public class GameInstance extends JComponent implements KeyListener {
                     && tetriminoNode.getXPos() == gameBoard.getActiveTetrimino().getXPos()
                     && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
                 try {
+                    audioPlayer.stopLoopingClips();
                     playSFX(1);
-                    Thread.sleep(3000);
+                    Thread.sleep(2500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
                 reset();
+                startBGM();
             }
         }
     }
@@ -174,14 +162,17 @@ public class GameInstance extends JComponent implements KeyListener {
         if (numOfRowClears > 0) {
             clearedLines += numOfRowClears;
 
+            int prevLevel = level;
             if (level < 9) {
-                if ((clearedLines - (level*10)) % 10 == 0) {
-                    levelUp();
-                }
+                setLevel(clearedLines / 10);
             } else {
-                if ((clearedLines - (level*20)) % 20 == 0) {
-                    levelUp();
+                setLevel((clearedLines + extraClearedLines) / 20);
+            }
+            if (prevLevel < level) {
+                if (level == 9) {
+                    extraClearedLines = clearedLines;
                 }
+                playSFX(2);
             }
 
             int pointValue;
@@ -226,11 +217,20 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void run() {
+        startBGM();
+        gameWindow.addKeyListener(this);
+        gameWindow.requestFocus();
+        try {
+            loadSprites();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
         double delta = 0;
-        while (true) {
+        while (running) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
@@ -248,6 +248,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 delta = 0;
             }
         }
+        audioPlayer.stopLoopingClips();
     }
 
     @Override
@@ -263,7 +264,8 @@ public class GameInstance extends JComponent implements KeyListener {
         Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
         for (int keyCode : pressedKeys) {
             if (keyCode == KeyEvent.VK_ESCAPE) {
-                System.exit(1);
+                instance.setWantsMainMenu(true);
+                running = false;
             }
             if (keyCode == KeyEvent.VK_R) {
                 reset();
