@@ -131,14 +131,18 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void checkForGameOver() {
-        if (gameBoard.getNodesOf(1).length > gameBoard.getBoardTileWidth()) {
-            try {
-                playSFX(1);
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        for (TetriminoNode tetriminoNode : gameBoard.getTetriminoNodes()) {
+            if (gameBoard.getActiveTetrimino() != null
+                    && tetriminoNode.getXPos() == gameBoard.getActiveTetrimino().getXPos()
+                    && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
+                try {
+                    playSFX(1);
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                reset();
             }
-            reset();
         }
     }
 
