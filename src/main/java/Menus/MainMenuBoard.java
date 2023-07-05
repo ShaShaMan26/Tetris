@@ -12,7 +12,7 @@ public class MainMenuBoard extends JComponent {
     private final int boardWidth, boardHeight, tileSize;
     private BufferedImage button, buttonHover, buttonActive;
     private Font font;
-    private JButton playButton;
+    private final JButton playButton = new JButton(), optionsButton = new JButton();
 
     public MainMenuBoard(Dimension displayDimensions) {
         boardWidth = displayDimensions.width;
@@ -44,38 +44,43 @@ public class MainMenuBoard extends JComponent {
     }
 
     public void addButtons() {
-        int playButtonWidth = tileSize * 9;
-        int playButtonHeight = tileSize*3;
-        int buttonXCenter = (boardWidth / 2) - (playButtonWidth / 2);
-        int buttonYCenter = (boardHeight / 2) - (playButtonHeight / 2);
+        int buttonWidth = tileSize * 9;
+        int buttonHeight = tileSize*3;
+        int buttonXCenter = (boardWidth / 2) - (buttonWidth / 2);
+        int buttonYCenter = (boardHeight / 2) - (buttonHeight / 2);
 
-        JButton playButton = new JButton();
-        playButton.setVerticalAlignment(SwingConstants.CENTER);
-        playButton.setHorizontalTextPosition(JButton.CENTER);
+        JButton[] buttons = {playButton, optionsButton};
 
-        playButton.setIcon(new ImageIcon(button.getScaledInstance(playButtonWidth, playButtonHeight, java.awt.Image.SCALE_SMOOTH)));
-        playButton.setRolloverIcon(new ImageIcon(buttonHover.getScaledInstance(playButtonWidth, playButtonHeight, java.awt.Image.SCALE_SMOOTH)));
-        playButton.setPressedIcon(new ImageIcon(buttonActive.getScaledInstance(playButtonWidth, playButtonHeight, java.awt.Image.SCALE_SMOOTH)));
+        for (JButton jButton : buttons) {
+            jButton.setVerticalAlignment(SwingConstants.CENTER);
+            jButton.setHorizontalTextPosition(JButton.CENTER);
+            jButton.setIcon(new ImageIcon(button.getScaledInstance(buttonWidth, buttonHeight, java.awt.Image.SCALE_SMOOTH)));
+            jButton.setRolloverIcon(new ImageIcon(buttonHover.getScaledInstance(buttonWidth, buttonHeight, java.awt.Image.SCALE_SMOOTH)));
+            jButton.setPressedIcon(new ImageIcon(buttonActive.getScaledInstance(buttonWidth, buttonHeight, java.awt.Image.SCALE_SMOOTH)));
+            jButton.setBorderPainted(false);
+            jButton.setBorder(null);
+            jButton.setMargin(new Insets(0, 0, 0, 0));
+            jButton.setContentAreaFilled(false);
+            jButton.setFocusable(false);
+            jButton.setForeground(Color.BLACK);
+            jButton.setFont(font);
+        }
 
-        playButton.setBorderPainted(false);
-        playButton.setBorder(null);
-        playButton.setMargin(new Insets(0, 0, 0, 0));
-        playButton.setContentAreaFilled(false);
-        playButton.setFocusable(false);
-
-        playButton.setBounds(buttonXCenter, buttonYCenter, playButtonWidth, playButtonHeight);
-
-        playButton.setForeground(Color.BLACK);
-        playButton.setFont(font);
+        playButton.setBounds(buttonXCenter, buttonYCenter - (int)(buttonHeight * .55), buttonWidth, buttonHeight);
         playButton.setText("play game");
-
-        this.playButton = playButton;
-
         this.add(playButton);
+
+        optionsButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight * .55), buttonWidth, buttonHeight);
+        optionsButton.setText("options");
+        this.add(optionsButton);
     }
 
     public JButton getPlayButton() {
         return playButton;
+    }
+
+    public JButton getOptionsButton() {
+        return optionsButton;
     }
 
     public void paintComponent(Graphics g) {

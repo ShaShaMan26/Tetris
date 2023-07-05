@@ -2,17 +2,21 @@ package Main;
 
 import Game.GameInstance;
 import Menus.MainMenuInstance;
+import Menus.OptionsBoard;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 public class Instance {
     private final JFrame gameWindow;
     private GameInstance gameInstance;
     private final MainMenuInstance mainMenuInstance;
-    private boolean wantsGame = false, wantsMainMenu = false, wantsExit = false;
+    private boolean wantsGame = false, wantsMainMenu = false, wantsExit = false, wantsOpenOptions = false,
+            wantsCloseOptions = false, optionsOpen = false;
     private boolean hardDropEnabled = false, ghostEnabled = false;
 
     public Instance(boolean hardDropEnabled, boolean ghostEnabled) {
@@ -44,6 +48,14 @@ public class Instance {
             gameInstance.setLevel(0);   // 11 is max
             wantsGame = false;
             startGame();
+        } else if (wantsOpenOptions) {
+            wantsOpenOptions = false;
+            optionsOpen = true;
+            openOptions();
+        } else if(wantsCloseOptions) {
+            wantsCloseOptions = false;
+            optionsOpen = false;
+            closeOptions();
         } else if (wantsMainMenu) {
             wantsMainMenu = false;
             returnToMainMenu();
@@ -65,6 +77,23 @@ public class Instance {
         gameInstance.run();
     }
 
+    public void openOptions() {
+        gameWindow.add(mainMenuInstance.getOptionsBoard());
+        gameWindow.remove(mainMenuInstance);
+        gameWindow.add(mainMenuInstance);
+        mainMenuInstance.grabFocus();
+        mainMenuInstance.requestFocus();
+    }
+
+    public void closeOptions() {
+        gameWindow.remove(mainMenuInstance.getOptionsBoard());
+        mainMenuInstance.requestFocus();
+    }
+
+    public boolean isOptionsOpen() {
+        return optionsOpen;
+    }
+
     public void returnToMainMenu() {
         gameWindow.remove(gameInstance);
         gameWindow.add(mainMenuInstance);
@@ -81,6 +110,14 @@ public class Instance {
 
     public void setWantsExit(boolean wantsExit) {
         this.wantsExit = wantsExit;
+    }
+
+    public void setWantsOpenOptions(boolean wantsOpenOptions) {
+        this.wantsOpenOptions = wantsOpenOptions;
+    }
+
+    public void setWantsCloseOptions(boolean wantsCloseOptions) {
+        this.wantsCloseOptions = wantsCloseOptions;
     }
 
     public JFrame getGameWindow() {
