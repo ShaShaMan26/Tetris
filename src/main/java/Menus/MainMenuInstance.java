@@ -49,6 +49,10 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
                     instance.setWantsExit(true);
                 }
             }
+            case KeyEvent.VK_F11 -> {
+                instance.toggleFullscreen();
+                instance.setWantsChangeFullscreen(true);
+            }
             case KeyEvent.VK_1 -> instance.toggleHardDrop();
             case KeyEvent.VK_2 -> instance.toggleGhost();
         }
@@ -61,12 +65,16 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainMenuBoard.getPlayButton()) {
-            instance.setWantsGame(true);
-        } else if (e.getSource() == mainMenuBoard.getOptionsButton()) {
-            instance.setWantsOpenOptions(true);
-        } else if (e.getSource() == optionsBoard.getExitButton()) {
-            instance.setWantsCloseOptions(true);
+        if (instance.isOptionsOpen()) {
+            if (e.getSource() == optionsBoard.getExitButton()) {
+                instance.setWantsCloseOptions(true);
+            }
+        } else {
+            if (e.getSource() == mainMenuBoard.getPlayButton()) {
+                instance.setWantsGame(true);
+            } else if (e.getSource() == mainMenuBoard.getOptionsButton()) {
+                instance.setWantsOpenOptions(true);
+            }
         }
     }
 }

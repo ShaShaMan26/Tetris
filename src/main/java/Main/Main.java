@@ -43,6 +43,6 @@ public class Main {
             }
         }
 
-        new Instance(hardDropEnabled, ghostEnabled).run();
+        new Instance(hardDropEnabled, ghostEnabled, true).run();
     }
 }

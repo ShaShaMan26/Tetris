@@ -16,7 +16,7 @@ import java.util.Objects;
 public class GameInstance extends JComponent implements KeyListener {
     private final Instance instance;
     private int level = 0, score = 0, clearedLines = 0, softDropNum = 0, extraClearedLines = 0;
-    private boolean running = true;
+    private boolean running = false;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
@@ -208,7 +208,12 @@ public class GameInstance extends JComponent implements KeyListener {
         }
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
     public void run() {
+        running = true;
         startBGM();
         gameWindow.addKeyListener(this);
         gameWindow.requestFocus();

@@ -7,14 +7,14 @@ public class TetriminoNode extends Component {
     private boolean active = true;
     private boolean displayed = true;
     private BufferedImage sprite;
-    private final int SIDELENGTH;
+    private int sideLength;
     private int colNum;
     private int rowNum;
 
     TetriminoNode(int colNum, int rowNum) {
         this.colNum = colNum;
         this.rowNum = rowNum;
-        SIDELENGTH = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds().height / 20;
+        sideLength = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds().height / 20;
     }
 
     public void moveRight() {
@@ -69,7 +69,7 @@ public class TetriminoNode extends Component {
         if (active && displayed) {
             super.paint(g);
 
-            g.drawImage(sprite, colNum * SIDELENGTH, rowNum * SIDELENGTH, SIDELENGTH, SIDELENGTH, null);
+            g.drawImage(sprite, colNum * sideLength, rowNum * sideLength, sideLength, sideLength, null);
         }
     }
 }

@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public abstract class Tetrimino extends Component {
     private int rotation = 0;
-    private int xPos;
-    private int yPos;
+    private int xPos, yPos;
     private final BufferedImage sprite;
     private TetriminoNode[] tetriminoNodes;
 
