@@ -1,6 +1,7 @@
 package Menus;
 
 import Main.Instance;
+import Sound.AudioPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
     private final OptionsBoard optionsBoard;
 
     public MainMenuInstance(Instance instance) {
+
         this.instance = instance;
         JFrame gameWindow = instance.getGameWindow();
         this.setSize(gameWindow.getSize());

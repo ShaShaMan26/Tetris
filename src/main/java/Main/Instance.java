@@ -2,6 +2,7 @@ package Main;
 
 import Game.GameInstance;
 import Menus.MainMenuInstance;
+import Sound.AudioPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ public class Instance {
     private JFrame gameWindow;
     private GameInstance gameInstance;
     private MainMenuInstance mainMenuInstance;
+    private final AudioPlayer audioPlayer =  new AudioPlayer();
     private boolean wantsGame = false, wantsMainMenu = false, wantsExit = false, wantsOpenOptions = false,
             wantsCloseOptions = false, optionsOpen = false, wantsChangeFullscreen = false;
     private boolean hardDropEnabled, ghostEnabled, fullscreen;
@@ -25,6 +27,15 @@ public class Instance {
         this.fullscreen = fullscreen;
 
         loadWindow();
+    }
+
+    public void playBGM() {
+        audioPlayer.setClip(4, true);
+        audioPlayer.play();
+    }
+
+    public void stopBGM() {
+        audioPlayer.stopLoopingClips();
     }
 
     public void loadWindow() {
@@ -81,6 +92,7 @@ public class Instance {
                 && gameInstance.isRunning()) {
             gameWindow.add(gameInstance);
         } else {
+            playBGM();
             gameWindow.add(mainMenuInstance);
         }
         mainMenuInstance.requestFocus();
@@ -89,6 +101,7 @@ public class Instance {
     public void handleRequests() {
         if (wantsGame) {
             try{
+                stopBGM();
                 gameInstance = new GameInstance(this);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -106,6 +119,7 @@ public class Instance {
             closeOptions();
         } else if (wantsMainMenu) {
             wantsMainMenu = false;
+            playBGM();
             returnToMainMenu();
 
             try {
@@ -118,6 +132,7 @@ public class Instance {
             System.exit(69);
         } else if (wantsChangeFullscreen) {
             wantsChangeFullscreen = false;
+            stopBGM();
 
             gameWindow.dispose();
             loadWindow();
