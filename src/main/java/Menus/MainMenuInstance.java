@@ -86,7 +86,7 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
             } else if (e.getSource() == mainMenuBoard.getOptionsButton()) {
                 instance.setWantsOpenOptions(true);
             } else if (e.getSource() == mainMenuBoard.getExitButton()) {
-                System.exit(69);
+                instance.setWantsExit(true);
             }
         }
 
