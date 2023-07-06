@@ -25,13 +25,23 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
         this.add(mainMenuBoard);
 
         this.addKeyListener(this);
-        mainMenuBoard.getPlayButton().addActionListener(this);
-        mainMenuBoard.getOptionsButton().addActionListener(this);
-        optionsBoard.getExitButton().addActionListener(this);
+
+        JButton[] buttons = {mainMenuBoard.getPlayButton(), mainMenuBoard.getOptionsButton(),
+                optionsBoard.getExitButton(), optionsBoard.getHardDropButton(), optionsBoard.getGhostButton(),
+                optionsBoard.getFullscreenButton()};
+        for (JButton button : buttons) {
+            button.addActionListener(this);
+        }
     }
 
     public OptionsBoard getOptionsBoard() {
         return optionsBoard;
+    }
+
+    public void updateToggleIcons() {
+        optionsBoard.updateToggleIcon(optionsBoard.getHardDropButton(), instance.isHardDropEnabled());
+        optionsBoard.updateToggleIcon(optionsBoard.getGhostButton(), instance.isGhostEnabled());
+        optionsBoard.updateToggleIcon(optionsBoard.getFullscreenButton(), instance.isFullscreen());
     }
 
     @Override
@@ -68,6 +78,13 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
         if (instance.isOptionsOpen()) {
             if (e.getSource() == optionsBoard.getExitButton()) {
                 instance.setWantsCloseOptions(true);
+            } else if (e.getSource() == optionsBoard.getHardDropButton()) {
+                instance.toggleHardDrop();
+            } else if (e.getSource() == optionsBoard.getGhostButton()) {
+                instance.toggleGhost();
+            } else if (e.getSource() == optionsBoard.getFullscreenButton()) {
+                instance.toggleFullscreen();
+                instance.setWantsChangeFullscreen(true);
             }
         } else {
             if (e.getSource() == mainMenuBoard.getPlayButton()) {
@@ -76,5 +93,7 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
                 instance.setWantsOpenOptions(true);
             }
         }
+
+        updateToggleIcons();
     }
 }

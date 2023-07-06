@@ -12,8 +12,9 @@ public class OptionsBoard extends JComponent {
     private final int displayWidth, displayHeight, tileSize;
     private final int boardSize, boardXCenter, boardYCenter;
     private Font font;
-    private JButton exitButton;
-    private BufferedImage optionsBox;
+    private final JButton exitButton = new JButton(), hardDropButton = new JButton(), ghostButton = new JButton(),
+            fullscreenButton = new JButton();
+    private BufferedImage optionsBox, toggleActive, toggleInactive;
 
     OptionsBoard(Dimension displayDimensions) {
         this.setFocusable(false);
@@ -35,6 +36,8 @@ public class OptionsBoard extends JComponent {
     public void loadAssets(){
         try {
             optionsBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/options_box.png")));
+            toggleActive = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/toggle_icon_on.png")));
+            toggleInactive = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/toggle_icon_off.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,26 +51,66 @@ public class OptionsBoard extends JComponent {
     }
 
     public void addButtons() {
-        exitButton = new JButton();
-        exitButton.setBounds(boardXCenter + (boardSize), boardYCenter, (int) (tileSize*1.35), tileSize);
+        JButton[] buttons = {exitButton, hardDropButton, ghostButton, fullscreenButton};
 
-        exitButton.setVerticalAlignment(SwingConstants.CENTER);
-        exitButton.setHorizontalTextPosition(JButton.CENTER);
-        exitButton.setBorderPainted(false);
-        exitButton.setBorder(null);
-        exitButton.setMargin(new Insets(0, 0, 0, 0));
-        exitButton.setContentAreaFilled(false);
-        exitButton.setFocusable(false);
-        exitButton.setForeground(Color.BLACK);
-        exitButton.setFont(font);
+        for (JButton button : buttons) {
+            button.setVerticalAlignment(SwingConstants.CENTER);
+            button.setHorizontalTextPosition(JButton.CENTER);
+            button.setBorderPainted(false);
+            button.setBorder(null);
+            button.setMargin(new Insets(0, 0, 0, 0));
+            button.setContentAreaFilled(false);
+            button.setFocusable(false);
+            button.setForeground(Color.BLACK);
+            button.setFont(font);
+        }
 
         exitButton.setText("X");
+        exitButton.setBounds(boardXCenter + (boardSize), boardYCenter, (int) (tileSize*1.35), tileSize);
+
+        hardDropButton.setText("hard drop");
+        ghostButton.setText("ghost piece");
+        fullscreenButton.setText("fullscreen");
+
+        JButton[] optionButtons = {hardDropButton, ghostButton, fullscreenButton};
+
+        int yOffset = boardYCenter + tileSize*2;
+        for (int i = 0; i < optionButtons.length; i++) {
+            optionButtons[i].setBounds(boardXCenter + tileSize, (int) (tileSize*(i*1.5)) + yOffset, (int) (tileSize*10.5) ,tileSize);
+            optionButtons[i].setHorizontalTextPosition(JButton.RIGHT);
+            optionButtons[i].setIconTextGap(tileSize/2);
+            optionButtons[i].setHorizontalAlignment(JButton.LEFT);
+            optionButtons[i].setIcon(new ImageIcon(toggleInactive.getScaledInstance(tileSize, tileSize, java.awt.Image.SCALE_SMOOTH)));
+        }
 
         this.add(exitButton);
+        this.add(hardDropButton);
+        this.add(ghostButton);
+        this.add(fullscreenButton);
     }
 
     public JButton getExitButton() {
         return exitButton;
+    }
+
+    public JButton getHardDropButton() {
+        return hardDropButton;
+    }
+
+    public JButton getGhostButton() {
+        return ghostButton;
+    }
+
+    public JButton getFullscreenButton() {
+        return fullscreenButton;
+    }
+
+    public void updateToggleIcon (JButton button, boolean active) {
+        if (active) {
+            button.setIcon(new ImageIcon(toggleActive.getScaledInstance(tileSize, tileSize, java.awt.Image.SCALE_SMOOTH)));
+        } else {
+            button.setIcon(new ImageIcon(toggleInactive.getScaledInstance(tileSize, tileSize, java.awt.Image.SCALE_SMOOTH)));
+        }
     }
 
     public void paintComponent(Graphics g) {

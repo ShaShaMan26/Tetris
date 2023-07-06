@@ -143,6 +143,10 @@ public class Instance {
         return optionsOpen;
     }
 
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+
     public void returnToMainMenu() {
         gameWindow.remove(gameInstance);
         gameWindow.add(mainMenuInstance);
