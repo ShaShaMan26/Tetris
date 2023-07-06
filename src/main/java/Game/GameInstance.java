@@ -21,7 +21,7 @@ public class GameInstance extends JComponent implements KeyListener {
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
     private GameBoard gameBoard;
-    private final GameDisplay gameDisplay;
+    private GameDisplay gameDisplay;
     private BufferedImage OTetriminoSprite, JTetriminoSprite, TTetriminoSprite, LTetriminoSprite, STetriminoSprite,
             ZTetriminoSprite, ITetriminoSprite1, ITetriminoSprite2, ITetriminoSprite3;
     private final AudioPlayer audioPlayer = new AudioPlayer();
@@ -29,19 +29,29 @@ public class GameInstance extends JComponent implements KeyListener {
 
     public GameInstance(Instance instance) throws IOException {
         this.instance = instance;
-
         this.gameWindow = instance.getGameWindow();
-        this.setSize(gameWindow.getSize());
 
+        resizeVisuals();
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void resizeVisuals() {
+        if (gameBoard != null ) {
+            this.remove(gameBoard);
+        }
+        if (gameDisplay != null) {
+            this.remove(gameDisplay);
+        }
+
+        this.setSize(gameWindow.getSize());
         gameBoard = new GameBoard(gameWindow.getSize(), instance.isGhostEnabled());
         gameDisplay = new GameDisplay(gameWindow.getSize(), gameBoard.getTileSize());
 
         this.add(gameBoard);
         this.add(gameDisplay);
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public void loadSprites() throws IOException {
@@ -95,7 +105,7 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void checkForGameOver() {
-        for (TetriminoNode tetriminoNode : gameBoard.getTetriminoNodes()) {
+        for (TetriminoNode tetriminoNode : gameBoard.getBoardTetriminoNodes()) {
             if (gameBoard.getActiveTetrimino() != null
                     && tetriminoNode.getXPos() == gameBoard.getActiveTetrimino().getXPos()
                     && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
@@ -206,6 +216,9 @@ public class GameInstance extends JComponent implements KeyListener {
             } catch (IOException ignored) {
             }
         }
+
+        gameBoard.updateTetriminoTileSize();
+        gameDisplay.updateTetriminoTileSize();
     }
 
     public boolean isRunning() {

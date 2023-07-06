@@ -22,6 +22,7 @@ public class Main {
 
         boolean hardDropEnabled = false;
         boolean ghostEnabled = false;
+        boolean fullscreen = false;
         try {
             Scanner saveDataScanner = new Scanner(new File(savePath));
             if (saveDataScanner.nextInt() > 0) {
@@ -43,6 +44,6 @@ public class Main {
             }
         }
 
-        new Instance(hardDropEnabled, ghostEnabled, true).run();
+        new Instance(hardDropEnabled, ghostEnabled, fullscreen).run();
     }
 }

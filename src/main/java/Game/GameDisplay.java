@@ -1,18 +1,18 @@
 package Game;
 
 import Game.Tetrimino.Tetrimino;
+import Game.Tetrimino.TetriminoNode;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
 public class GameDisplay extends JComponent {
-    private final int TILE_SIZE, boardLeftSideXPos, boardRightSideXPos;
+    private int tileSize, boardLeftSideXPos, boardRightSideXPos;
     private int score, rowsCleared, level;
     private final Dimension DISPLAY_DIMENSION;
     private BufferedImage borderTileRight, borderTileLeft, queueBox, levelBox, linesBox, scoreBox;
@@ -23,9 +23,9 @@ public class GameDisplay extends JComponent {
         DISPLAY_DIMENSION = displayDimensions;
         this.setSize(displayDimensions);
 
-        TILE_SIZE = tileSize;
+        this.tileSize = tileSize;
 
-        int boardWidth = TILE_SIZE * 10;
+        int boardWidth = this.tileSize * 10;
         int displayWidth = DISPLAY_DIMENSION.width;
         int displayCenter = displayWidth / 2;
 
@@ -37,7 +37,7 @@ public class GameDisplay extends JComponent {
         InputStream stream = getClass().getResourceAsStream("/fonts/tetris-gb.ttf");
         try {
             assert stream != null;
-            font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont((float)TILE_SIZE);
+            font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont((float) this.tileSize);
         } catch (IOException | FontFormatException e) {
             throw new RuntimeException(e);
         }
@@ -57,10 +57,18 @@ public class GameDisplay extends JComponent {
     }
 
     public void setQueuedTetrimino(Tetrimino queuedTetrimino) {
-        queuedTetrimino.setXPos((boardLeftSideXPos) / TILE_SIZE - 4);
+        queuedTetrimino.setXPos((boardLeftSideXPos) / tileSize - 4);
         queuedTetrimino.setYPos(2);
 
         this.queuedTetrimino = queuedTetrimino;
+    }
+
+    public void updateTetriminoTileSize() {
+        if (queuedTetrimino != null) {
+            for (TetriminoNode tetriminoNode : queuedTetrimino.getTetriminoNodes()) {
+                tetriminoNode.setSideLength(tileSize);
+            }
+        }
     }
 
     public void setLevel(int level) {
@@ -79,20 +87,20 @@ public class GameDisplay extends JComponent {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, DISPLAY_DIMENSION.width, DISPLAY_DIMENSION.height);
 
-        int borderTileSize = (int)(TILE_SIZE*.67);
+        int borderTileSize = (int)(tileSize *.67);
         for (int j = 0; j <= DISPLAY_DIMENSION.height / borderTileSize; j++) {
-            g.drawImage(borderTileRight, boardRightSideXPos, borderTileSize*j, TILE_SIZE, TILE_SIZE, null);
+            g.drawImage(borderTileRight, boardRightSideXPos, borderTileSize*j, tileSize, tileSize, null);
         }
 
         for (int j = 0; j <= DISPLAY_DIMENSION.height / borderTileSize; j++) {
-            g.drawImage(borderTileLeft, boardLeftSideXPos - TILE_SIZE, borderTileSize*j, TILE_SIZE, TILE_SIZE, null);
+            g.drawImage(borderTileLeft, boardLeftSideXPos - tileSize, borderTileSize*j, tileSize, tileSize, null);
         }
     }
 
     public void paintQueueBox(Graphics g) {
-        int queueBoxSize = (int)(TILE_SIZE*4.75);
-        int xOffset = (int)(TILE_SIZE*1.4);
-        int yOffset = (int)(TILE_SIZE*.65);
+        int queueBoxSize = (int)(tileSize *4.75);
+        int xOffset = (int)(tileSize *1.4);
+        int yOffset = (int)(tileSize *.65);
         g.drawImage(queueBox, boardLeftSideXPos - queueBoxSize - xOffset, yOffset, queueBoxSize, queueBoxSize, null);
 
         if (queuedTetrimino != null) {
@@ -101,71 +109,71 @@ public class GameDisplay extends JComponent {
     }
 
     public void paintScoreBox(Graphics g) {
-        int boxSize = (int)(7.625 * TILE_SIZE);
-        int xOffset = boardRightSideXPos + (int)(TILE_SIZE*1.5);
+        int boxSize = (int)(7.625 * tileSize);
+        int xOffset = boardRightSideXPos + (int)(tileSize *1.5);
 
-        int textOffset = (int)(TILE_SIZE*5.35);
+        int textOffset = (int)(tileSize *5.35);
         if (score >= 1000000) {
-            textOffset -= TILE_SIZE*4.95;
+            textOffset -= tileSize *4.95;
         } else if (score >= 100000) {
-            textOffset -= TILE_SIZE*4.5;
+            textOffset -= tileSize *4.5;
         } else if (score >= 10000) {
-            textOffset -= TILE_SIZE*4;
+            textOffset -= tileSize *4;
         } else if (score >= 1000) {
-            textOffset -= TILE_SIZE*3;
+            textOffset -= tileSize *3;
         } else if (score >= 100) {
-            textOffset -= TILE_SIZE*2;
+            textOffset -= tileSize *2;
         } else if (score >= 10) {
-            textOffset -= TILE_SIZE;
+            textOffset -= tileSize;
         }
 
-        int yOffset = (int)(TILE_SIZE*.25);
+        int yOffset = (int)(tileSize *.25);
 
         g.drawImage(scoreBox, xOffset, yOffset, boxSize, boxSize, null);
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+score, xOffset + textOffset, yOffset + (int)(TILE_SIZE*3.25));
+        g.drawString(""+score, xOffset + textOffset, yOffset + (int)(tileSize *3.25));
     }
 
     public void paintLevelBox(Graphics g) {
-        int boxSize = (int)(5.75 * TILE_SIZE);
-        int xOffset = boardRightSideXPos + (int)(TILE_SIZE*3.375);
+        int boxSize = (int)(5.75 * tileSize);
+        int xOffset = boardRightSideXPos + (int)(tileSize *3.375);
 
-        int textOffset = (int)(TILE_SIZE*3.5);
+        int textOffset = (int)(tileSize *3.5);
         if (level >= 10) {
-            textOffset -= TILE_SIZE;
+            textOffset -= tileSize;
         }
 
-        int yOffset = (int)(TILE_SIZE*4.3);
+        int yOffset = (int)(tileSize *4.3);
 
         g.drawImage(levelBox, xOffset, yOffset, boxSize, boxSize, null);
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+level, xOffset + textOffset, yOffset + (int)(TILE_SIZE*2.25));
+        g.drawString(""+level, xOffset + textOffset, yOffset + (int)(tileSize *2.25));
     }
 
     public void paintLinesBox(Graphics g) {
-        int boxSize = (int)(5.75 * TILE_SIZE);
-        int xOffset = boardRightSideXPos + (int)(TILE_SIZE*3.375);
+        int boxSize = (int)(5.75 * tileSize);
+        int xOffset = boardRightSideXPos + (int)(tileSize *3.375);
 
-        int textOffset = (int)(TILE_SIZE*3.5);
+        int textOffset = (int)(tileSize *3.5);
         if (rowsCleared >= 1000) {
-            textOffset -= TILE_SIZE*3;
+            textOffset -= tileSize *3;
         } else if (rowsCleared >= 100) {
-            textOffset -= TILE_SIZE*2;
+            textOffset -= tileSize *2;
         } else if (rowsCleared >= 10) {
-            textOffset -= TILE_SIZE;
+            textOffset -= tileSize;
         }
 
-        int yOffset = (int)(TILE_SIZE*7.35);
+        int yOffset = (int)(tileSize *7.35);
 
         g.drawImage(linesBox, xOffset, yOffset, boxSize, boxSize, null);
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+rowsCleared, xOffset + textOffset, yOffset + (int)(TILE_SIZE*2.25));
+        g.drawString(""+rowsCleared, xOffset + textOffset, yOffset + (int)(tileSize *2.25));
     }
 
     public void paintComponent(Graphics g) {

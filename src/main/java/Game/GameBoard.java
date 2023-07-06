@@ -13,7 +13,7 @@ public class GameBoard extends JComponent {
     private final int boardHeight;
     private final int tileSize;
     private Tetrimino activeTetrimino;
-    private boolean ghostPieceEnabled = false;
+    private final boolean ghostPieceEnabled;
 
     public GameBoard(Dimension displayDimension, boolean ghostPieceEnabled) {
         this.ghostPieceEnabled = ghostPieceEnabled;
@@ -34,12 +34,34 @@ public class GameBoard extends JComponent {
         return activeTetrimino;
     }
 
-    public TetriminoNode[] getTetriminoNodes() {
+    public TetriminoNode[] getBoardTetriminoNodes() {
         ArrayList<TetriminoNode> tetriminoNodes = new ArrayList<>();
 
         for (Component component : this.getComponents()) {
             if (component instanceof Tetrimino
                     && component != activeTetrimino) {
+                for (TetriminoNode tetriminoNode : ((Tetrimino) component).getTetriminoNodes()) {
+                    if (tetriminoNode.getActive()) {
+                        tetriminoNodes.add(tetriminoNode);
+                    }
+                }
+            }
+        }
+
+        TetriminoNode[] finalTetriminoNodes = new TetriminoNode[tetriminoNodes.size()];
+
+        for (int i = 0; i < tetriminoNodes.size(); i++) {
+            finalTetriminoNodes[i] = tetriminoNodes.get(i);
+        }
+
+        return finalTetriminoNodes;
+    }
+
+    public TetriminoNode[] getTetriminoNodes() {
+        ArrayList<TetriminoNode> tetriminoNodes = new ArrayList<>();
+
+        for (Component component : this.getComponents()) {
+            if (component instanceof Tetrimino) {
                 for (TetriminoNode tetriminoNode : ((Tetrimino) component).getTetriminoNodes()) {
                     if (tetriminoNode.getActive()) {
                         tetriminoNodes.add(tetriminoNode);
@@ -69,6 +91,12 @@ public class GameBoard extends JComponent {
         return tileSize;
     }
 
+    public void updateTetriminoTileSize() {
+        for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+            tetriminoNode.setSideLength(tileSize);
+        }
+    }
+
     public void clearQueuedClears() {
         TetriminoNode[] nodesToBeCleared = getQueuedClears();
 
@@ -78,7 +106,7 @@ public class GameBoard extends JComponent {
 
         for (int row = getBoardTileHeight()-1; row > -1; row--) {
             if (getNodesOf(row).length == 0) {
-                for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+                for (TetriminoNode tetriminoNode : getBoardTetriminoNodes()) {
                     if (tetriminoNode.getYPos() < row) {
                         tetriminoNode.moveDown();
                     }
@@ -110,7 +138,7 @@ public class GameBoard extends JComponent {
     public TetriminoNode[] getNodesOf(int row) {
         ArrayList<TetriminoNode> nodesInRow = new ArrayList<>();
 
-        for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+        for (TetriminoNode tetriminoNode : getBoardTetriminoNodes()) {
             if (tetriminoNode.getYPos() == row) {
                 nodesInRow.add(tetriminoNode);
             }
@@ -140,7 +168,7 @@ public class GameBoard extends JComponent {
 
     public boolean blocking(Tetrimino activeTetrimino) {
         for (TetriminoNode activeTetriminoNode : activeTetrimino.getTetriminoNodes()) {
-            for (TetriminoNode tetriminoNode : getTetriminoNodes()) {
+            for (TetriminoNode tetriminoNode : getBoardTetriminoNodes()) {
                 if (activeTetriminoNode.getYPos() == tetriminoNode.getYPos()
                         && activeTetriminoNode.getXPos() == tetriminoNode.getXPos()) {
                     return true;

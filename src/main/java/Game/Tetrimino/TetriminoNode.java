@@ -7,14 +7,13 @@ public class TetriminoNode extends Component {
     private boolean active = true;
     private boolean displayed = true;
     private BufferedImage sprite;
-    private int sideLength;
+    private int sideLength = 0;
     private int colNum;
     private int rowNum;
 
     TetriminoNode(int colNum, int rowNum) {
         this.colNum = colNum;
         this.rowNum = rowNum;
-        sideLength = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds().height / 20;
     }
 
     public void moveRight() {
@@ -55,6 +54,10 @@ public class TetriminoNode extends Component {
 
     public boolean getActive() {
         return active;
+    }
+
+    public void setSideLength(int sideLength) {
+        this.sideLength = sideLength;
     }
 
     public void setSprite(BufferedImage sprite) {

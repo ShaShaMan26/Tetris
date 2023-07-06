@@ -4,6 +4,7 @@ import Game.GameInstance;
 import Menus.MainMenuInstance;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.FileWriter;
@@ -31,7 +32,6 @@ public class Instance {
         gameWindow.setTitle("Tetris");
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLayout(null);
-        gameWindow.setLocationRelativeTo(null);
 
         if (fullscreen) {
             gameWindow.setUndecorated(true);
@@ -40,12 +40,13 @@ public class Instance {
         } else {
             gameWindow.setUndecorated(false);
             gameWindow.setResizable(true);
-            gameWindow.setSize(500, 500);
+            gameWindow.setSize(640, 360);
         }
 
         gameWindow.setVisible(true);
 
         setWindow();
+
         try {
             gameInstance = new GameInstance(this);
         } catch (IOException e) {
@@ -54,6 +55,7 @@ public class Instance {
 
         gameWindow.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
+                gameWindow.setSize(gameWindow.getWidth(), (gameWindow.getWidth() / 16) * 9);
                 setWindow();
             }
         });
@@ -65,10 +67,10 @@ public class Instance {
         }
         if (gameInstance != null) {
             gameWindow.remove(gameInstance);
+            gameInstance.resizeVisuals();
         }
 
         mainMenuInstance = new MainMenuInstance(this);
-        //update gameInstance size
 
         if (gameInstance != null
                 && gameInstance.isRunning()) {
