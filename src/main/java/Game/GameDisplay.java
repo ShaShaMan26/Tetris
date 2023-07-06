@@ -133,7 +133,7 @@ public class GameDisplay extends JComponent {
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+score, xOffset + textOffset, yOffset + (int)(tileSize *3.25));
+        g.drawString(String.valueOf(score), xOffset + textOffset, yOffset + (int)(tileSize *3.25));
     }
 
     public void paintLevelBox(Graphics g) {
@@ -151,7 +151,7 @@ public class GameDisplay extends JComponent {
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+level, xOffset + textOffset, yOffset + (int)(tileSize *2.25));
+        g.drawString(String.valueOf(level), xOffset + textOffset, yOffset + (int)(tileSize *2.25));
     }
 
     public void paintLinesBox(Graphics g) {
@@ -173,7 +173,7 @@ public class GameDisplay extends JComponent {
 
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString(""+rowsCleared, xOffset + textOffset, yOffset + (int)(tileSize *2.25));
+        g.drawString(String.valueOf(rowsCleared), xOffset + textOffset, yOffset + (int)(tileSize *2.25));
     }
 
     public void paintComponent(Graphics g) {

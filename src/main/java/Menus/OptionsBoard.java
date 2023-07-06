@@ -1,14 +1,19 @@
 package Menus;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class OptionsBoard extends JComponent {
     private final int displayWidth, displayHeight, tileSize;
+    private final int boardSize, boardXCenter, boardYCenter;
     private Font font;
     private JButton exitButton;
+    private BufferedImage optionsBox;
 
     OptionsBoard(Dimension displayDimensions) {
         this.setFocusable(false);
@@ -18,12 +23,21 @@ public class OptionsBoard extends JComponent {
         this.setBounds(0, 0, displayWidth, displayHeight);
         tileSize = displayHeight / 20;
 
+        boardSize = tileSize*15;
+        boardXCenter = (displayWidth / 2) - (boardSize / 2);
+        boardYCenter = (displayHeight / 2) - (boardSize / 2);
+
         loadAssets();
 
         addButtons();
     }
 
     public void loadAssets(){
+        try {
+            optionsBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/options_box.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         InputStream stream = getClass().getResourceAsStream("/fonts/tetris-gb.ttf");
         try {
             assert stream != null;
@@ -35,7 +49,7 @@ public class OptionsBoard extends JComponent {
 
     public void addButtons() {
         exitButton = new JButton();
-        exitButton.setBounds(0, 0 , 200, 100);
+        exitButton.setBounds(boardXCenter + (boardSize), boardYCenter, (int) (tileSize*1.35), tileSize);
 
         exitButton.setVerticalAlignment(SwingConstants.CENTER);
         exitButton.setHorizontalTextPosition(JButton.CENTER);
@@ -47,7 +61,7 @@ public class OptionsBoard extends JComponent {
         exitButton.setForeground(Color.BLACK);
         exitButton.setFont(font);
 
-        exitButton.setText("exit");
+        exitButton.setText("X");
 
         this.add(exitButton);
     }
@@ -62,10 +76,6 @@ public class OptionsBoard extends JComponent {
         g.setColor(new Color(0, 0, 0, 50));
         g.fillRect(0, 0, displayWidth, displayHeight);
 
-        int boardSize = (int)(((displayHeight / 9) * 16) * .35);
-        int boardXCenter = (displayWidth / 2) - (boardSize / 2);
-        int boardYCenter = (displayHeight / 2) - (boardSize / 2);
-        g.setColor(new Color(248,248,248));
-        g.fillRect(boardXCenter, boardYCenter, boardSize, boardSize);
+        g.drawImage(optionsBox, boardXCenter, boardYCenter, boardSize, boardSize, null);
     }
 }
