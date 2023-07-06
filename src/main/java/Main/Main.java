@@ -28,16 +28,18 @@ public class Main {
             if (saveDataScanner.nextInt() > 0) {
                 hardDropEnabled = true;
             }
-
             if (saveDataScanner.nextInt() > 0) {
                 ghostEnabled = true;
+            }
+            if (saveDataScanner.nextInt() > 0) {
+                fullscreen = true;
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (NoSuchElementException e) {
             try {
                 FileWriter fileWriter = new FileWriter(savePath);
-                fileWriter.write("0\n0");
+                fileWriter.write("0\n0\n0");
                 fileWriter.close();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

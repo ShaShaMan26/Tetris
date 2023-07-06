@@ -207,6 +207,14 @@ public class Instance {
                 fileWriter.write("0");
             }
 
+            fileWriter.write("\n");
+
+            if (fullscreen) {
+                fileWriter.write("1");
+            } else {
+                fileWriter.write("0");
+            }
+
             fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
