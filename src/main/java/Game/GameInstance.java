@@ -6,6 +6,7 @@ import Sound.AudioPlayer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -46,9 +47,26 @@ public class GameInstance extends JComponent implements KeyListener {
             this.remove(gameDisplay);
         }
 
-        this.setSize(gameWindow.getSize());
-        gameBoard = new GameBoard(gameWindow.getSize(), instance.isGhostEnabled());
-        gameDisplay = new GameDisplay(gameWindow.getSize(), gameBoard.getTileSize());
+        int topInset = gameWindow.getInsets().top;
+        Dimension dimension = new Dimension(gameWindow.getSize().width, gameWindow.getSize().height - topInset);
+        this.setSize(dimension);
+
+        if (gameBoard != null) {
+            Tetrimino[] tetriminos = gameBoard.getBoardTetriminos();
+            Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
+            gameBoard = new GameBoard(dimension, instance.isGhostEnabled());
+            if (activeTetrimino != null) {
+                gameBoard.add(activeTetrimino);
+                gameBoard.setActiveTetrimino(activeTetrimino);
+            }
+            for (Tetrimino tetrimino : tetriminos) {
+                gameBoard.add(tetrimino);
+            }
+        } else {
+            gameBoard = new GameBoard(dimension, instance.isGhostEnabled());
+        }
+
+        gameDisplay = new GameDisplay(dimension, gameBoard.getTileSize());
 
         this.add(gameBoard);
         this.add(gameDisplay);
@@ -157,6 +175,7 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void update() {
+        gameWindow.setResizable(false);
         TetriminoNode[] queuedClears = gameBoard.getQueuedClears();
 
         int numOfRowClears = queuedClears.length / gameBoard.getBoardTileWidth();
@@ -219,6 +238,8 @@ public class GameInstance extends JComponent implements KeyListener {
 
         gameBoard.updateTetriminoTileSize();
         gameDisplay.updateTetriminoTileSize();
+
+        gameWindow.setResizable(true);
     }
 
     public boolean isRunning() {

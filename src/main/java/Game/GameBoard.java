@@ -57,6 +57,25 @@ public class GameBoard extends JComponent {
         return finalTetriminoNodes;
     }
 
+    public Tetrimino[] getBoardTetriminos() {
+        ArrayList<Tetrimino> tetriminos = new ArrayList<>();
+
+        for (Component component : this.getComponents()) {
+            if (component instanceof Tetrimino
+                    && component != activeTetrimino) {
+                tetriminos.add((Tetrimino) component);
+            }
+        }
+
+        Tetrimino[] finalTetriminos = new Tetrimino[tetriminos.size()];
+
+        for (int i = 0; i < tetriminos.size(); i++) {
+            finalTetriminos[i] = tetriminos.get(i);
+        }
+
+        return finalTetriminos;
+    }
+
     public TetriminoNode[] getTetriminoNodes() {
         ArrayList<TetriminoNode> tetriminoNodes = new ArrayList<>();
 

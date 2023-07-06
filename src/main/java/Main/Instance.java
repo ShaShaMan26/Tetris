@@ -40,10 +40,12 @@ public class Instance {
         } else {
             gameWindow.setUndecorated(false);
             gameWindow.setResizable(true);
-            gameWindow.setSize(640, 360);
+
+            gameWindow.setSize(1080, 720);
         }
 
         gameWindow.setVisible(true);
+        gameWindow.setLocationRelativeTo(null);
 
         setWindow();
 
@@ -55,7 +57,6 @@ public class Instance {
 
         gameWindow.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
-                gameWindow.setSize(gameWindow.getWidth(), (gameWindow.getWidth() / 16) * 9);
                 setWindow();
             }
         });
