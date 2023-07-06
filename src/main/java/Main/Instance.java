@@ -72,6 +72,10 @@ public class Instance {
         }
 
         mainMenuInstance = new MainMenuInstance(this);
+        if (optionsOpen) {
+            gameWindow.add(mainMenuInstance.getOptionsBoard());
+            mainMenuInstance.updateToggleIcons();
+        }
 
         if (gameInstance != null
                 && gameInstance.isRunning()) {

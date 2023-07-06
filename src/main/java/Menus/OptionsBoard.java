@@ -74,9 +74,10 @@ public class OptionsBoard extends JComponent {
 
         JButton[] optionButtons = {hardDropButton, ghostButton, fullscreenButton};
 
-        int yOffset = boardYCenter + tileSize*2;
+        int yOffset = boardYCenter + tileSize*4;
+        int xOffset = (tileSize*2);
         for (int i = 0; i < optionButtons.length; i++) {
-            optionButtons[i].setBounds(boardXCenter + tileSize, (int) (tileSize*(i*1.5)) + yOffset, (int) (tileSize*10.5) ,tileSize);
+            optionButtons[i].setBounds(boardXCenter + xOffset, tileSize*(i*2) + yOffset, (int) (tileSize*10.5) ,tileSize);
             optionButtons[i].setHorizontalTextPosition(JButton.RIGHT);
             optionButtons[i].setIconTextGap(tileSize/2);
             optionButtons[i].setHorizontalAlignment(JButton.LEFT);

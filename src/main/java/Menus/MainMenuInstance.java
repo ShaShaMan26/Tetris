@@ -59,12 +59,6 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
                     instance.setWantsExit(true);
                 }
             }
-            case KeyEvent.VK_F11 -> {
-                instance.toggleFullscreen();
-                instance.setWantsChangeFullscreen(true);
-            }
-            case KeyEvent.VK_1 -> instance.toggleHardDrop();
-            case KeyEvent.VK_2 -> instance.toggleGhost();
         }
     }
 
