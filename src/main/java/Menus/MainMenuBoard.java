@@ -12,7 +12,7 @@ public class MainMenuBoard extends JComponent {
     private final int boardWidth, boardHeight, tileSize;
     private BufferedImage button, buttonHover, buttonActive;
     private Font font;
-    private final JButton playButton = new JButton(), optionsButton = new JButton();
+    private final JButton playButton = new JButton(), optionsButton = new JButton(), exitButton = new JButton();
 
     public MainMenuBoard(Dimension displayDimensions) {
         boardWidth = displayDimensions.width;
@@ -49,7 +49,7 @@ public class MainMenuBoard extends JComponent {
         int buttonXCenter = (boardWidth / 2) - (buttonWidth / 2);
         int buttonYCenter = (boardHeight / 2) - (buttonHeight / 2);
 
-        JButton[] buttons = {playButton, optionsButton};
+        JButton[] buttons = {playButton, optionsButton, exitButton};
 
         for (JButton jButton : buttons) {
             jButton.setVerticalAlignment(SwingConstants.CENTER);
@@ -73,6 +73,10 @@ public class MainMenuBoard extends JComponent {
         optionsButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight * .55), buttonWidth, buttonHeight);
         optionsButton.setText("options");
         this.add(optionsButton);
+
+        exitButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight * 1.65), buttonWidth, buttonHeight);
+        exitButton.setText("exit");
+        this.add(exitButton);
     }
 
     public JButton getPlayButton() {
@@ -81,6 +85,10 @@ public class MainMenuBoard extends JComponent {
 
     public JButton getOptionsButton() {
         return optionsButton;
+    }
+
+    public JButton getExitButton() {
+        return exitButton;
     }
 
     public void paintComponent(Graphics g) {

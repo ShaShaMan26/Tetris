@@ -27,8 +27,8 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
         this.addKeyListener(this);
 
         JButton[] buttons = {mainMenuBoard.getPlayButton(), mainMenuBoard.getOptionsButton(),
-                optionsBoard.getExitButton(), optionsBoard.getHardDropButton(), optionsBoard.getGhostButton(),
-                optionsBoard.getFullscreenButton()};
+                mainMenuBoard.getExitButton(), optionsBoard.getExitButton(), optionsBoard.getHardDropButton(),
+                optionsBoard.getGhostButton(), optionsBoard.getFullscreenButton()};
         for (JButton button : buttons) {
             button.addActionListener(this);
         }
@@ -51,13 +51,11 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
 
     @Override
     public synchronized void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE -> {
-                if (instance.isOptionsOpen()) {
-                    instance.setWantsCloseOptions(true);
-                } else {
-                    instance.setWantsExit(true);
-                }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (instance.isOptionsOpen()) {
+                instance.setWantsCloseOptions(true);
+            } else {
+                instance.setWantsExit(true);
             }
         }
     }
@@ -85,6 +83,8 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
                 instance.setWantsGame(true);
             } else if (e.getSource() == mainMenuBoard.getOptionsButton()) {
                 instance.setWantsOpenOptions(true);
+            } else if (e.getSource() == mainMenuBoard.getExitButton()) {
+                System.exit(69);
             }
         }
 
