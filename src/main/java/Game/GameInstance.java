@@ -174,6 +174,7 @@ public class GameInstance extends JComponent implements KeyListener {
             paused = false;
         } else {
             try {
+                playSFX(11);
                 BufferedImage gamePausedImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/pause_board.png")));
                 audioPlayer.stopLoopingClips();
                 gameDisplay.setQueuedTetrimino(null);

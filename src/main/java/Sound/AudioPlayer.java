@@ -9,7 +9,7 @@ public class AudioPlayer {
 
     Clip clip;
     ArrayList<Clip> loopingClips = new ArrayList<>();
-    URL[] soundURL = new URL[11];
+    URL[] soundURL = new URL[12];
 
     public AudioPlayer() {
         soundURL[0] = getClass().getResource("/audio/game_bgm.wav");
@@ -23,6 +23,7 @@ public class AudioPlayer {
         soundURL[8] = getClass().getResource("/audio/rotate_piece.wav");
         soundURL[9] = getClass().getResource("/audio/tetris_clear.wav");
         soundURL[10] = getClass().getResource("/audio/game_over_message.wav");
+        soundURL[11] = getClass().getResource("/audio/pause.wav");
     }
 
     public void setClip(int i, boolean looping) {

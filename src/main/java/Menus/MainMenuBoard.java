@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class MainMenuBoard extends JComponent {
     private final int boardWidth, boardHeight, tileSize;
-    private BufferedImage button, buttonHover, buttonActive;
+    private BufferedImage button, buttonHover, buttonActive, titleSprite;
     private Font font;
     private final JButton playButton = new JButton(), optionsButton = new JButton(), exitButton = new JButton();
 
@@ -30,6 +30,7 @@ public class MainMenuBoard extends JComponent {
             button = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/button.png")));
             buttonHover = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/button_hover.png")));
             buttonActive = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/button_active.png")));
+            titleSprite = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/title_sprite.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -66,15 +67,15 @@ public class MainMenuBoard extends JComponent {
             jButton.setFont(font);
         }
 
-        playButton.setBounds(buttonXCenter, buttonYCenter - (int)(buttonHeight * .55), buttonWidth, buttonHeight);
+        playButton.setBounds(buttonXCenter, buttonYCenter - (int)(buttonHeight*.1), buttonWidth, buttonHeight);
         playButton.setText("play game");
         this.add(playButton);
 
-        optionsButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight * .55), buttonWidth, buttonHeight);
+        optionsButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight), buttonWidth, buttonHeight);
         optionsButton.setText("options");
         this.add(optionsButton);
 
-        exitButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight * 1.65), buttonWidth, buttonHeight);
+        exitButton.setBounds(buttonXCenter, buttonYCenter + (int)(buttonHeight*2.1), buttonWidth, buttonHeight);
         exitButton.setText("exit");
         this.add(exitButton);
     }
@@ -96,5 +97,14 @@ public class MainMenuBoard extends JComponent {
 
         g.setColor(new Color(248,248,248));
         g.fillRect(0, 0, boardWidth, boardHeight);
+
+        int width = tileSize*19;
+        int height = tileSize*6;
+        int xPos = (boardWidth / 2) - (width / 2);
+
+        g.drawImage(titleSprite, xPos, tileSize, width, height, null);
+        g.setFont(font);
+        g.setColor(Color.BLACK);
+        g.drawString("sha's", xPos, tileSize-2);
     }
 }
