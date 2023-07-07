@@ -174,7 +174,7 @@ public class GameInstance extends JComponent implements KeyListener {
             paused = false;
         } else {
             try {
-                BufferedImage gamePausedImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/game_over_board.png")));
+                BufferedImage gamePausedImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/pause_board.png")));
                 audioPlayer.stopLoopingClips();
                 gameDisplay.setQueuedTetrimino(null);
                 gameBoard.setGameBoardImage(gamePausedImage);
@@ -272,7 +272,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 } catch (IOException ignored) {
                 }
             }
-        } else {
+        } else if (gameOver) {
             try {
                 BufferedImage gameOverBoard = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/game_over_board.png")));
                 gameBoard.setGameBoardImage(gameOverBoard);
