@@ -20,11 +20,13 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+        int highScore = 0;
         boolean hardDropEnabled = false;
         boolean ghostEnabled = false;
         boolean fullscreen = false;
         try {
             Scanner saveDataScanner = new Scanner(new File(savePath));
+            highScore = saveDataScanner.nextInt();
             if (saveDataScanner.nextInt() > 0) {
                 hardDropEnabled = true;
             }
@@ -39,13 +41,13 @@ public class Main {
         } catch (NoSuchElementException e) {
             try {
                 FileWriter fileWriter = new FileWriter(savePath);
-                fileWriter.write("0\n0\n0");
+                fileWriter.write("0\n0\n0\n0");
                 fileWriter.close();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
 
-        new Instance(hardDropEnabled, ghostEnabled, fullscreen).run();
+        new Instance(hardDropEnabled, ghostEnabled, fullscreen, highScore).run();
     }
 }

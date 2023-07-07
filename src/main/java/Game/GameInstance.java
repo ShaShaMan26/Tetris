@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class GameInstance extends JComponent implements KeyListener {
     private final Instance instance;
-    private int level = 0, score = 0, clearedLines = 0, softDropNum = 0, extraClearedLines = 0;
+    private int level = 0, score = 0, clearedLines = 0, softDropNum = 0, extraClearedLines = 0, highScore = 0;
     private boolean running = false, gameOver = false, paused = false;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
@@ -31,6 +31,7 @@ public class GameInstance extends JComponent implements KeyListener {
     public GameInstance(Instance instance) throws IOException {
         this.instance = instance;
         this.gameWindow = instance.getGameWindow();
+        highScore = instance.getHighScore();
 
         resizeVisuals();
     }
@@ -206,6 +207,7 @@ public class GameInstance extends JComponent implements KeyListener {
     public void updateGameDisplay() {
         gameDisplay.setQueuedTetrimino(createTerimino(nextTetriminoNum));
         gameDisplay.setScore(score);
+        gameDisplay.setHighScore(highScore);
         gameDisplay.setRowsCleared(clearedLines);
         gameDisplay.setLevel(level);
     }
@@ -285,6 +287,11 @@ public class GameInstance extends JComponent implements KeyListener {
         gameBoard.updateTetriminoTileSize();
         gameDisplay.updateTetriminoTileSize();
 
+        if (score > instance.getHighScore()) {
+            instance.setHighScore(score);
+            highScore = instance.getHighScore();
+        }
+
         gameWindow.setResizable(true);
     }
 
@@ -357,7 +364,7 @@ public class GameInstance extends JComponent implements KeyListener {
                     instance.setWantsMainMenu(true);
                     running = false;
                 }
-                if (keyCode == KeyEvent.VK_R) {
+                if (keyCode == KeyEvent.VK_0) {
                     reset();
                 }
                 if (keyCode == KeyEvent.VK_A

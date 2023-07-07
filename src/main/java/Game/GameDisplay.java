@@ -13,9 +13,9 @@ import java.util.Objects;
 
 public class GameDisplay extends JComponent {
     private final int tileSize, boardLeftSideXPos, boardRightSideXPos;
-    private int score, rowsCleared, level;
+    private int score, rowsCleared, level, highScore;
     private final Dimension DISPLAY_DIMENSION;
-    private BufferedImage borderTileRight, borderTileLeft, queueBox, levelBox, linesBox, scoreBox;
+    private BufferedImage borderTileRight, borderTileLeft, queueBox, levelBox, linesBox, scoreBox, highScoreBox;
     private Tetrimino queuedTetrimino;
     private final Font font;
 
@@ -51,6 +51,7 @@ public class GameDisplay extends JComponent {
             levelBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/level_box.png")));
             linesBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/lines_box.png")));
             scoreBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/score_box.png")));
+            highScoreBox = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/high_score_box.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,6 +80,10 @@ public class GameDisplay extends JComponent {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
     }
 
     public void setRowsCleared(int rowsCleared) {
@@ -110,6 +115,34 @@ public class GameDisplay extends JComponent {
         }
     }
 
+    public void paintHighScoreBox(Graphics g) {
+        int boxSize = (int)(7.625 * tileSize);
+        int xOffset = boardRightSideXPos + (int)(tileSize *1.5);
+
+        int textOffset = (int)(tileSize *5.35);
+        if (highScore >= 1000000) {
+            textOffset -= tileSize *4.95;
+        } else if (highScore >= 100000) {
+            textOffset -= tileSize *4.5;
+        } else if (highScore >= 10000) {
+            textOffset -= tileSize *4;
+        } else if (highScore >= 1000) {
+            textOffset -= tileSize *3;
+        } else if (highScore >= 100) {
+            textOffset -= tileSize *2;
+        } else if (highScore >= 10) {
+            textOffset -= tileSize;
+        }
+
+        int yOffset = (int)(tileSize *.25);
+
+        g.drawImage(highScoreBox, xOffset, yOffset, boxSize, boxSize, null);
+
+        g.setFont(font);
+        g.setColor(Color.BLACK);
+        g.drawString(String.valueOf(highScore), xOffset + textOffset, yOffset + (int)(tileSize *3.25));
+    }
+
     public void paintScoreBox(Graphics g) {
         int boxSize = (int)(7.625 * tileSize);
         int xOffset = boardRightSideXPos + (int)(tileSize *1.5);
@@ -129,7 +162,7 @@ public class GameDisplay extends JComponent {
             textOffset -= tileSize;
         }
 
-        int yOffset = (int)(tileSize *.25);
+        int yOffset = (int)(tileSize * 4.25);
 
         g.drawImage(scoreBox, xOffset, yOffset, boxSize, boxSize, null);
 
@@ -147,7 +180,7 @@ public class GameDisplay extends JComponent {
             textOffset -= tileSize;
         }
 
-        int yOffset = (int)(tileSize *4.3);
+        int yOffset = (int)(tileSize * 11.45);
 
         g.drawImage(levelBox, xOffset, yOffset, boxSize, boxSize, null);
 
@@ -169,7 +202,7 @@ public class GameDisplay extends JComponent {
             textOffset -= tileSize;
         }
 
-        int yOffset = (int)(tileSize *7.35);
+        int yOffset = (int)(tileSize *8.35);
 
         g.drawImage(linesBox, xOffset, yOffset, boxSize, boxSize, null);
 
@@ -190,5 +223,7 @@ public class GameDisplay extends JComponent {
         paintLinesBox(g);
 
         paintScoreBox(g);
+
+        paintHighScoreBox(g);
     }
 }

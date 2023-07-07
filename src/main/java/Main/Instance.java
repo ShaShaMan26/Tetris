@@ -21,11 +21,14 @@ public class Instance {
     private boolean wantsGame = false, wantsMainMenu = false, wantsExit = false, wantsOpenOptions = false,
             wantsCloseOptions = false, optionsOpen = false, wantsChangeFullscreen = false;
     private boolean hardDropEnabled, ghostEnabled, fullscreen;
+    private int highScore;
 
-    public Instance(boolean hardDropEnabled, boolean ghostEnabled, boolean fullscreen) {
+    public Instance(boolean hardDropEnabled, boolean ghostEnabled, boolean fullscreen, int highScore) {
         this.hardDropEnabled = hardDropEnabled;
         this.ghostEnabled = ghostEnabled;
         this.fullscreen = fullscreen;
+
+        this.highScore = highScore;
 
         loadWindow();
     }
@@ -211,6 +214,14 @@ public class Instance {
         return gameWindow;
     }
 
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
     public void run() {long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
@@ -235,6 +246,10 @@ public class Instance {
             writer.close();
 
             FileWriter fileWriter = new FileWriter(localPath + "\\SaveData.txt");
+
+            fileWriter.write(String.valueOf(highScore));
+
+            fileWriter.write("\n");
 
             if (hardDropEnabled) {
                 fileWriter.write("1");
