@@ -130,8 +130,7 @@ public class GameInstance extends JComponent implements KeyListener {
                     && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
                 try {
                     audioPlayer.stopLoopingClips();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                } catch (Exception ignored) {
                 }
                 playSFX(1);
                 gameOver();
@@ -141,7 +140,7 @@ public class GameInstance extends JComponent implements KeyListener {
 
     public void gameOver() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -265,9 +264,9 @@ public class GameInstance extends JComponent implements KeyListener {
                 playSFX(7);
             }
 
-            updateGameDisplay();
-
             gameBoard.clearQueuedClears();
+
+            updateGameDisplay();
 
             if (gameBoard.getActiveTetrimino() == null) {
                 try {
