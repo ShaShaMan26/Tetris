@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class GameDisplay extends JComponent {
-    private int tileSize, boardLeftSideXPos, boardRightSideXPos;
+    private final int tileSize, boardLeftSideXPos, boardRightSideXPos;
     private int score, rowsCleared, level;
     private final Dimension DISPLAY_DIMENSION;
     private BufferedImage borderTileRight, borderTileLeft, queueBox, levelBox, linesBox, scoreBox;
@@ -57,8 +57,10 @@ public class GameDisplay extends JComponent {
     }
 
     public void setQueuedTetrimino(Tetrimino queuedTetrimino) {
-        queuedTetrimino.setXPos((boardLeftSideXPos) / tileSize - 4);
-        queuedTetrimino.setYPos(2);
+        if (queuedTetrimino != null) {
+            queuedTetrimino.setXPos((boardLeftSideXPos) / tileSize - 4);
+            queuedTetrimino.setYPos(2);
+        }
 
         this.queuedTetrimino = queuedTetrimino;
     }

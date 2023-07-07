@@ -3,10 +3,14 @@ package Game;
 import Game.Tetrimino.Tetrimino;
 import Game.Tetrimino.TetriminoNode;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GameBoard extends JComponent {
     private final int boardWidth;
@@ -14,6 +18,7 @@ public class GameBoard extends JComponent {
     private final int tileSize;
     private Tetrimino activeTetrimino;
     private final boolean ghostPieceEnabled;
+    private BufferedImage gameBoardImage;
 
     public GameBoard(Dimension displayDimension, boolean ghostPieceEnabled) {
         this.ghostPieceEnabled = ghostPieceEnabled;
@@ -108,6 +113,10 @@ public class GameBoard extends JComponent {
 
     public int getTileSize() {
         return tileSize;
+    }
+
+    public void setGameBoardImage(BufferedImage gameBoardImage) {
+        this.gameBoardImage = gameBoardImage;
     }
 
     public void updateTetriminoTileSize() {
@@ -243,6 +252,10 @@ public class GameBoard extends JComponent {
 
         for (Component component : this.getComponents()) {
             component.paint(g);
+        }
+
+        if (gameBoardImage != null) {
+            g.drawImage(gameBoardImage, 0, 0, boardWidth, boardHeight, null);
         }
     }
 }

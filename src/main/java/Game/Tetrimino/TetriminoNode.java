@@ -11,7 +11,7 @@ public class TetriminoNode extends Component {
     private int colNum;
     private int rowNum;
 
-    TetriminoNode(int colNum, int rowNum) {
+    public TetriminoNode(int colNum, int rowNum) {
         this.colNum = colNum;
         this.rowNum = rowNum;
     }

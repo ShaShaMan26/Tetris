@@ -17,7 +17,7 @@ import java.util.Objects;
 public class GameInstance extends JComponent implements KeyListener {
     private final Instance instance;
     private int level = 0, score = 0, clearedLines = 0, softDropNum = 0, extraClearedLines = 0;
-    private boolean running = false;
+    private boolean running = false, gameOver = false, paused = false;
     private double fallTime = 0;
     private int nextTetriminoNum = (int)(Math.random() * 7);
     private final JFrame gameWindow;
@@ -129,26 +129,61 @@ public class GameInstance extends JComponent implements KeyListener {
                     && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
                 try {
                     audioPlayer.stopLoopingClips();
-                    playSFX(1);
-                    Thread.sleep(2500);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-                reset();
-                startBGM();
+                playSFX(1);
+                gameOver();
             }
         }
     }
 
+    public void gameOver() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        playSFX(10);
+
+        gameOver = true;
+    }
+
     public void reset() {
+        gameOver = false;
+        audioPlayer.stopLoopingClips();
+        startBGM();
+
         this.remove(gameBoard);
         this.remove(gameDisplay);
         gameBoard = new GameBoard(gameWindow.getSize(), instance.isGhostEnabled());
         this.add(gameBoard);
         this.add(gameDisplay);
+        instance.setWindow();
         score = 0;
         clearedLines = 0;
         level = 0;
+    }
+
+    public void togglePause() {
+        if (paused) {
+            startBGM();
+            gameBoard.setGameBoardImage(null);
+
+            paused = false;
+        } else {
+            try {
+                BufferedImage gamePausedImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/game_over_board.png")));
+                audioPlayer.stopLoopingClips();
+                gameDisplay.setQueuedTetrimino(null);
+                gameBoard.setGameBoardImage(gamePausedImage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            paused = true;
+        }
     }
 
     public void attemptToMoveDown(Tetrimino tetrimino) {
@@ -176,63 +211,73 @@ public class GameInstance extends JComponent implements KeyListener {
 
     public void update() {
         gameWindow.setResizable(false);
-        TetriminoNode[] queuedClears = gameBoard.getQueuedClears();
 
-        int numOfRowClears = queuedClears.length / gameBoard.getBoardTileWidth();
+        if (!gameOver && !paused) {
+            TetriminoNode[] queuedClears = gameBoard.getQueuedClears();
 
-        if (numOfRowClears > 0) {
-            clearedLines += numOfRowClears;
+            int numOfRowClears = queuedClears.length / gameBoard.getBoardTileWidth();
 
-            int prevLevel = level;
-            if (level < 9) {
-                setLevel(clearedLines / 10);
-            } else {
-                setLevel((clearedLines + extraClearedLines) / 20);
-            }
-            if (prevLevel < level) {
-                if (level == 9) {
-                    extraClearedLines = clearedLines;
+            if (numOfRowClears > 0) {
+                clearedLines += numOfRowClears;
+
+                int prevLevel = level;
+                if (level < 9) {
+                    setLevel(clearedLines / 10);
+                } else {
+                    setLevel((clearedLines + extraClearedLines) / 20);
                 }
-                playSFX(2);
-            }
-
-            int pointValue;
-
-            if (numOfRowClears == 4) {
-                pointValue = 1200;
-                playSFX(9);
-            } else if (numOfRowClears == 3) {
-                pointValue = 300;
-                playSFX(3);
-            } else if (numOfRowClears == 2) {
-                pointValue = 100;
-                playSFX(3);
-            } else {
-                pointValue = 40;
-                playSFX(3);
-            }
-            score += pointValue * (level+1);
-            for (int i = 5; i > 0; i--) {
-                for (TetriminoNode tetriminoNode : queuedClears) {
-                    tetriminoNode.toggleDisplayed();
+                if (prevLevel < level) {
+                    if (level == 9) {
+                        extraClearedLines = clearedLines;
+                    }
+                    playSFX(2);
                 }
-                gameWindow.repaint();
+
+                int pointValue;
+
+                if (numOfRowClears == 4) {
+                    pointValue = 1200;
+                    playSFX(9);
+                } else if (numOfRowClears == 3) {
+                    pointValue = 300;
+                    playSFX(3);
+                } else if (numOfRowClears == 2) {
+                    pointValue = 100;
+                    playSFX(3);
+                } else {
+                    pointValue = 40;
+                    playSFX(3);
+                }
+                score += pointValue * (level+1);
+                for (int i = 5; i > 0; i--) {
+                    for (TetriminoNode tetriminoNode : queuedClears) {
+                        tetriminoNode.toggleDisplayed();
+                    }
+                    gameWindow.repaint();
+                    try {
+                        Thread.sleep(i * 100L);
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+                playSFX(7);
+            }
+
+            updateGameDisplay();
+
+            gameBoard.clearQueuedClears();
+
+            if (gameBoard.getActiveTetrimino() == null) {
                 try {
-                    Thread.sleep(i * 100L);
-                } catch (InterruptedException ignored) {
+                    spawnTetrimino();
+                } catch (IOException ignored) {
                 }
             }
-            playSFX(7);
-        }
-
-        updateGameDisplay();
-
-        gameBoard.clearQueuedClears();
-
-        if (gameBoard.getActiveTetrimino() == null) {
+        } else {
             try {
-                spawnTetrimino();
-            } catch (IOException ignored) {
+                BufferedImage gameOverBoard = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/game_over_board.png")));
+                gameBoard.setGameBoardImage(gameOverBoard);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -266,7 +311,9 @@ public class GameInstance extends JComponent implements KeyListener {
             delta += (now - lastTime) / ns;
             lastTime = now;
             if (delta >= 1) {
-                if (gameBoard.getActiveTetrimino() != null) {
+                if (gameBoard.getActiveTetrimino() != null
+                        && !gameOver
+                        && !paused) {
                     fallTime++;
                     if(fallTime >= 53 - (4*level)) {
                         attemptToMoveDown(gameBoard.getActiveTetrimino());
@@ -288,21 +335,30 @@ public class GameInstance extends JComponent implements KeyListener {
 
     @Override
     public synchronized void keyPressed(KeyEvent e) {
+        if (gameOver) {
+            reset();
+            gameOver = false;
+        }
+
         if (!pressedKeys.contains(e.getKeyCode())) {
             pressedKeys.add(e.getKeyCode());
         }
 
         Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
         for (int keyCode : pressedKeys) {
-            if (keyCode == KeyEvent.VK_ESCAPE) {
-                instance.setWantsMainMenu(true);
-                running = false;
-            }
-            if (keyCode == KeyEvent.VK_R) {
-                reset();
+            if (keyCode == KeyEvent.VK_SPACE) {
+                togglePause();
             }
 
-            if (activeTetrimino != null) {
+            if (activeTetrimino != null
+                    && !paused) {
+                if (keyCode == KeyEvent.VK_ESCAPE) {
+                    instance.setWantsMainMenu(true);
+                    running = false;
+                }
+                if (keyCode == KeyEvent.VK_R) {
+                    reset();
+                }
                 if (keyCode == KeyEvent.VK_A
                         || keyCode == KeyEvent.VK_LEFT) {
                     activeTetrimino.moveLeft();

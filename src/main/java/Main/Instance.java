@@ -6,7 +6,6 @@ import Sound.AudioPlayer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.FileWriter;
@@ -82,6 +81,7 @@ public class Instance {
     }
 
     public void setWindow() {
+        stopBGM();
         if (mainMenuInstance != null){
             gameWindow.remove(mainMenuInstance);
         }
@@ -92,6 +92,7 @@ public class Instance {
 
         mainMenuInstance = new MainMenuInstance(this);
         if (optionsOpen) {
+            gameWindow.setResizable(false);
             gameWindow.add(mainMenuInstance.getOptionsBoard());
             mainMenuInstance.updateToggleIcons();
         }
@@ -100,8 +101,8 @@ public class Instance {
                 && gameInstance.isRunning()) {
             gameWindow.add(gameInstance);
         } else {
-            playBGM();
             gameWindow.add(mainMenuInstance);
+            playBGM();
         }
         mainMenuInstance.requestFocus();
     }
@@ -120,10 +121,12 @@ public class Instance {
         } else if (wantsOpenOptions) {
             wantsOpenOptions = false;
             optionsOpen = true;
+            gameWindow.setResizable(false);
             openOptions();
         } else if(wantsCloseOptions) {
             wantsCloseOptions = false;
             optionsOpen = false;
+            gameWindow.setResizable(true);
             closeOptions();
         } else if (wantsMainMenu) {
             wantsMainMenu = false;
