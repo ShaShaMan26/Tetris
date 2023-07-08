@@ -119,9 +119,13 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void spawnTetrimino() throws IOException {
+
         gameBoard.setActiveTetrimino(createTerimino(nextTetriminoNum));
 
         gameBoard.add(gameBoard.getActiveTetrimino());
+
+        lastActedTetrimino = gameBoard.getActiveTetrimino();
+        pressedKeys.clear();
 
         nextTetriminoNum = (int)(Math.random() * 7);
 
@@ -316,7 +320,6 @@ public class GameInstance extends JComponent implements KeyListener {
 
         try {
             spawnTetrimino();
-            lastActedTetrimino = gameBoard.getActiveTetrimino();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -355,164 +358,175 @@ public class GameInstance extends JComponent implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (running) {
-            if (!pressedKeys.contains(e.getKeyCode())) {
-                pressedKeys.add(e.getKeyCode());
-            }
-
-            if (gameBoard.getActiveTetrimino() != lastActedTetrimino) {
-                pressedKeys.clear();
-            }
-
-            if (gameOver) {
-                reset();
-                pressedKeys.clear();
-                gameOver = false;
-            }
-
-            Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
-            for (int keyCode : pressedKeys) {
-                if (keyCode == KeyEvent.VK_SPACE) {
-                    togglePause();
-                    pressedKeys.clear();
+            try {
+                if (!pressedKeys.contains(e.getKeyCode())) {
+                    pressedKeys.add(e.getKeyCode());
                 }
 
-                if (activeTetrimino != null
-                        && !paused
-                        && !gameOver) {
-                    if (keyCode == KeyEvent.VK_ESCAPE) {
+                if (gameOver) {
+                    reset();
+                    pressedKeys.clear();
+                    gameOver = false;
+                }
+
+                Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
+
+                if (gameBoard.getActiveTetrimino() != lastActedTetrimino) {
+                    pressedKeys.clear();
+                }
+                lastActedTetrimino = null;
+
+                for (int keyCode : pressedKeys) {
+                    if (keyCode == KeyEvent.VK_SPACE) {
+                        togglePause();
+                        pressedKeys.clear();
+                    }
+
+                    if (keyCode == KeyEvent.VK_ESCAPE
+                            && !paused) {
                         instance.setWantsMainMenu(true);
                         running = false;
                     }
-                    if (keyCode == KeyEvent.VK_0) {
-                        reset();
-                    }
-                    if (keyCode == KeyEvent.VK_A
-                            || keyCode == KeyEvent.VK_LEFT) {
-                        activeTetrimino.moveLeft();
-                        if (gameBoard.outOfHorBounds(activeTetrimino)
-                                || gameBoard.blocking(activeTetrimino)) {
-                            activeTetrimino.moveRight();
-                        }
-                        playSFX(5);
-                    }
-                    if (keyCode == KeyEvent.VK_D
-                            || keyCode == KeyEvent.VK_RIGHT) {
-                        activeTetrimino.moveRight();
-                        if (gameBoard.outOfHorBounds(activeTetrimino)
-                                || gameBoard.blocking(activeTetrimino)) {
-                            activeTetrimino.moveLeft();
-                        }
-                        playSFX(5);
-                    }
-                    if (keyCode == KeyEvent.VK_S
-                            || keyCode == KeyEvent.VK_DOWN) {
-                        attemptToMoveDown(activeTetrimino);
-                        softDropNum++;
-                    }
-                    if ((keyCode == KeyEvent.VK_W
-                            || keyCode == KeyEvent.VK_UP)
-                            && instance.isHardDropEnabled()) {
-                        score += gameBoard.hardDrop(activeTetrimino);
-                        gameBoard.setActiveTetrimino(null);
-                        playSFX(6);
-                    }
-                    if (keyCode == KeyEvent.VK_Q
-                            || keyCode == KeyEvent.VK_X) {
-                        try {
-                            activeTetrimino.rotateLeft();
-                            while (gameBoard.outOfVirBounds(activeTetrimino)) {
-                                activeTetrimino.moveUp();
-                            }
-                            int movesUp = 0;
-                            while (gameBoard.blocking(activeTetrimino)) {
-                                activeTetrimino.moveUp();
-                                movesUp++;
-                                if (movesUp > 3) {
-                                    break;
-                                }
-                            }
-                            while (gameBoard.outOfHorBounds(activeTetrimino)) {
-                                if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
-                                    activeTetrimino.moveLeft();
-                                } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
-                                    activeTetrimino.moveRight();
-                                }
-                                while (movesUp > 0) {
-                                    activeTetrimino.moveDown();
-                                    movesUp--;
-                                }
-                            }
 
-                            if (gameBoard.blocking(activeTetrimino)) {
+                    if (activeTetrimino != null
+                            && !paused
+                            && !gameOver) {
+
+                        if (keyCode == KeyEvent.VK_0) {
+                            reset();
+                        }
+                        if (keyCode == KeyEvent.VK_A
+                                || keyCode == KeyEvent.VK_LEFT) {
+                            activeTetrimino.moveLeft();
+                            if (gameBoard.outOfHorBounds(activeTetrimino)
+                                    || gameBoard.blocking(activeTetrimino)) {
+                                activeTetrimino.moveRight();
+                            }
+                            lastActedTetrimino = gameBoard.getActiveTetrimino();
+                            playSFX(5);
+                        }
+                        if (keyCode == KeyEvent.VK_D
+                                || keyCode == KeyEvent.VK_RIGHT) {
+                            activeTetrimino.moveRight();
+                            if (gameBoard.outOfHorBounds(activeTetrimino)
+                                    || gameBoard.blocking(activeTetrimino)) {
+                                activeTetrimino.moveLeft();
+                            }
+                            lastActedTetrimino = gameBoard.getActiveTetrimino();
+                            playSFX(5);
+                        }
+                        if (keyCode == KeyEvent.VK_S
+                                || keyCode == KeyEvent.VK_DOWN) {
+                            attemptToMoveDown(activeTetrimino);
+                            softDropNum++;
+                            lastActedTetrimino = gameBoard.getActiveTetrimino();
+                        }
+                        if ((keyCode == KeyEvent.VK_W
+                                || keyCode == KeyEvent.VK_UP)
+                                && instance.isHardDropEnabled()) {
+                            score += gameBoard.hardDrop(activeTetrimino);
+                            gameBoard.setActiveTetrimino(null);
+                            playSFX(6);
+                        }
+                        if (keyCode == KeyEvent.VK_Q
+                                || keyCode == KeyEvent.VK_X) {
+                            try {
+                                activeTetrimino.rotateLeft();
+                                while (gameBoard.outOfVirBounds(activeTetrimino)) {
+                                    activeTetrimino.moveUp();
+                                }
+                                int movesUp = 0;
+                                while (gameBoard.blocking(activeTetrimino)) {
+                                    activeTetrimino.moveUp();
+                                    movesUp++;
+                                    if (movesUp > 3) {
+                                        break;
+                                    }
+                                }
+                                while (gameBoard.outOfHorBounds(activeTetrimino)) {
+                                    if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
+                                        activeTetrimino.moveLeft();
+                                    } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
+                                        activeTetrimino.moveRight();
+                                    }
+                                    while (movesUp > 0) {
+                                        activeTetrimino.moveDown();
+                                        movesUp--;
+                                    }
+                                }
+
+                                if (gameBoard.blocking(activeTetrimino)) {
+                                    activeTetrimino.rotateRight();
+
+                                    while (gameBoard.outOfVirBounds(activeTetrimino)) {
+                                        activeTetrimino.moveUp();
+                                    }
+                                    while (gameBoard.outOfHorBounds(activeTetrimino)) {
+                                        if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
+                                            activeTetrimino.moveRight();
+                                        } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
+                                            activeTetrimino.moveLeft();
+                                        }
+                                    }
+                                }
+                                playSFX(8);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                        if (keyCode == KeyEvent.VK_E
+                                || keyCode == KeyEvent.VK_C) {
+                            try {
                                 activeTetrimino.rotateRight();
 
                                 while (gameBoard.outOfVirBounds(activeTetrimino)) {
                                     activeTetrimino.moveUp();
                                 }
-                                while (gameBoard.outOfHorBounds(activeTetrimino)) {
-                                    if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
-                                        activeTetrimino.moveRight();
-                                    } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
-                                        activeTetrimino.moveLeft();
-                                    }
-                                }
-                            }
-                            playSFX(8);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                    if (keyCode == KeyEvent.VK_E
-                            || keyCode == KeyEvent.VK_C) {
-                        try {
-                            activeTetrimino.rotateRight();
-
-                            while (gameBoard.outOfVirBounds(activeTetrimino)) {
-                                activeTetrimino.moveUp();
-                            }
-                            int movesUp = 0;
-                            while (gameBoard.blocking(activeTetrimino)) {
-                                activeTetrimino.moveUp();
-                                movesUp++;
-                                if (movesUp > 3) {
-                                    break;
-                                }
-                            }
-                            while (gameBoard.outOfHorBounds(activeTetrimino)) {
-                                if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
-                                    activeTetrimino.moveLeft();
-                                } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
-                                    activeTetrimino.moveRight();
-                                }
-                                while (movesUp > 0) {
-                                    activeTetrimino.moveDown();
-                                    movesUp--;
-                                }
-                            }
-
-                            if (gameBoard.blocking(activeTetrimino)) {
-                                activeTetrimino.rotateLeft();
-
-                                while (gameBoard.outOfVirBounds(activeTetrimino)) {
+                                int movesUp = 0;
+                                while (gameBoard.blocking(activeTetrimino)) {
                                     activeTetrimino.moveUp();
+                                    movesUp++;
+                                    if (movesUp > 3) {
+                                        break;
+                                    }
                                 }
                                 while (gameBoard.outOfHorBounds(activeTetrimino)) {
                                     if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
-                                        activeTetrimino.moveRight();
-                                    } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
                                         activeTetrimino.moveLeft();
+                                    } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
+                                        activeTetrimino.moveRight();
+                                    }
+                                    while (movesUp > 0) {
+                                        activeTetrimino.moveDown();
+                                        movesUp--;
                                     }
                                 }
+
+                                if (gameBoard.blocking(activeTetrimino)) {
+                                    activeTetrimino.rotateLeft();
+
+                                    while (gameBoard.outOfVirBounds(activeTetrimino)) {
+                                        activeTetrimino.moveUp();
+                                    }
+                                    while (gameBoard.outOfHorBounds(activeTetrimino)) {
+                                        if (activeTetrimino.getXPos() > gameBoard.getBoardTileWidth() / 2) {
+                                            activeTetrimino.moveRight();
+                                        } else if (activeTetrimino.getXPos() < gameBoard.getBoardTileWidth() / 2) {
+                                            activeTetrimino.moveLeft();
+                                        }
+                                    }
+                                }
+                                playSFX(8);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
                             }
-                            playSFX(8);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
                         }
                     }
                 }
+            } catch (Exception ignored) {
+
             }
         }
-
     }
 
     @Override
@@ -523,6 +537,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 || e.getKeyCode() == KeyEvent.VK_DOWN) {
             softDropNum = 0;
         }
+
         pressedKeys.remove((Integer) e.getKeyCode());
     }
 }
