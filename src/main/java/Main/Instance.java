@@ -113,13 +113,7 @@ public class Instance {
 
     public void handleRequests() {
         if (wantsGame) {
-            try{
-                stopBGM();
-                gameInstance.stopAudio();
-                gameInstance = new GameInstance(this);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            stopBGM();
             gameInstance.setLevel(0);   // 11 is max
             wantsGame = false;
             startGame();
@@ -135,8 +129,8 @@ public class Instance {
             closeOptions();
         } else if (wantsMainMenu) {
             wantsMainMenu = false;
-            playBGM();
             returnToMainMenu();
+            playBGM();
 
             try {
                 gameInstance = new GameInstance(this);

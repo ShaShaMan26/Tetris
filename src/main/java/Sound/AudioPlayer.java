@@ -9,6 +9,7 @@ public class AudioPlayer {
 
     Clip clip;
     ArrayList<Clip> loopingClips = new ArrayList<>();
+    ArrayList<Clip> clips = new ArrayList<>();
     URL[] soundURL = new URL[12];
 
     public AudioPlayer() {
@@ -35,6 +36,8 @@ public class AudioPlayer {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 loopingClips.add(clip);
             }
+            clips.add(clip);
+            audioInputStream.close();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,6 +51,12 @@ public class AudioPlayer {
     public void stopLoopingClips() {
         for (Clip clip : loopingClips) {
             clip.stop();
+        }
+    }
+
+    public void close() {
+        for (Clip clip : clips) {
+            clip.close();
         }
     }
 }
