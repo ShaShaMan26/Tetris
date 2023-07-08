@@ -90,6 +90,10 @@ public class GameInstance extends JComponent implements KeyListener {
         audioPlayer.play();
     }
 
+    public void stopAudio() {
+        audioPlayer.stopLoopingClips();
+    }
+
     public void playSFX(int i) {
         audioPlayer.setClip(i, false);
         audioPlayer.play();
@@ -129,7 +133,7 @@ public class GameInstance extends JComponent implements KeyListener {
                     && tetriminoNode.getXPos() == gameBoard.getActiveTetrimino().getXPos()
                     && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
                 try {
-                    audioPlayer.stopLoopingClips();
+                    stopAudio();
                 } catch (Exception ignored) {
                 }
                 playSFX(1);
@@ -141,18 +145,18 @@ public class GameInstance extends JComponent implements KeyListener {
     public void gameOver() {
         try {
             Thread.sleep(2000);
+
+            playSFX(10);
+
+            gameOver = true;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        playSFX(10);
-
-        gameOver = true;
     }
 
     public void reset() {
         gameOver = false;
-        audioPlayer.stopLoopingClips();
+        stopAudio();
         startBGM();
 
         this.remove(gameBoard);
@@ -176,7 +180,7 @@ public class GameInstance extends JComponent implements KeyListener {
             try {
                 playSFX(11);
                 BufferedImage gamePausedImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/pause_board.png")));
-                audioPlayer.stopLoopingClips();
+                stopAudio();
                 gameDisplay.setQueuedTetrimino(null);
                 gameBoard.setGameBoardImage(gamePausedImage);
             } catch (IOException e) {
@@ -333,7 +337,7 @@ public class GameInstance extends JComponent implements KeyListener {
                 delta = 0;
             }
         }
-        audioPlayer.stopLoopingClips();
+        stopAudio();
     }
 
     @Override
@@ -341,14 +345,15 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     @Override
-    public synchronized void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
+        if (!pressedKeys.contains(e.getKeyCode())) {
+            pressedKeys.add(e.getKeyCode());
+        }
+
         if (gameOver) {
             reset();
             gameOver = false;
-        }
-
-        if (!pressedKeys.contains(e.getKeyCode())) {
-            pressedKeys.add(e.getKeyCode());
+            pressedKeys.clear();
         }
 
         Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
@@ -358,7 +363,8 @@ public class GameInstance extends JComponent implements KeyListener {
             }
 
             if (activeTetrimino != null
-                    && !paused) {
+                    && !paused
+                    && !gameOver) {
                 if (keyCode == KeyEvent.VK_ESCAPE) {
                     instance.setWantsMainMenu(true);
                     running = false;

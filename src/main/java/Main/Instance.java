@@ -88,6 +88,7 @@ public class Instance {
         if (mainMenuInstance != null){
             gameWindow.remove(mainMenuInstance);
         }
+
         if (gameInstance != null) {
             gameWindow.remove(gameInstance);
             gameInstance.resizeVisuals();
@@ -114,6 +115,7 @@ public class Instance {
         if (wantsGame) {
             try{
                 stopBGM();
+                gameInstance.stopAudio();
                 gameInstance = new GameInstance(this);
             } catch (IOException e) {
                 throw new RuntimeException(e);
