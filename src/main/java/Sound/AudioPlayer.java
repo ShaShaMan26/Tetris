@@ -7,10 +7,11 @@ import java.util.ArrayList;
 
 public class AudioPlayer {
 
-    Clip clip;
-    ArrayList<Clip> loopingClips = new ArrayList<>();
-    ArrayList<Clip> clips = new ArrayList<>();
-    URL[] soundURL = new URL[12];
+    private Clip clip;
+    private final ArrayList<Clip> loopingClips = new ArrayList<>();
+    private final ArrayList<Clip> clips = new ArrayList<>();
+    private final URL[] soundURL = new URL[12];
+    private float volume;
 
     public AudioPlayer() {
         soundURL[0] = getClass().getResource("/audio/game_bgm.wav");
@@ -32,6 +33,8 @@ public class AudioPlayer {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            fc.setValue(volume);
             if (looping) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 loopingClips.add(clip);
@@ -58,5 +61,9 @@ public class AudioPlayer {
         for (Clip clip : clips) {
             clip.close();
         }
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
     }
 }

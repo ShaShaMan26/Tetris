@@ -22,15 +22,27 @@ public class Instance {
             wantsCloseOptions = false, optionsOpen = false, wantsChangeFullscreen = false;
     private boolean hardDropEnabled, ghostEnabled, fullscreen;
     private int highScore;
+    private float volume;
 
-    public Instance(boolean hardDropEnabled, boolean ghostEnabled, boolean fullscreen, int highScore) {
+    public Instance(boolean hardDropEnabled, boolean ghostEnabled, boolean fullscreen, int highScore, float volume) {
         this.hardDropEnabled = hardDropEnabled;
         this.ghostEnabled = ghostEnabled;
         this.fullscreen = fullscreen;
 
         this.highScore = highScore;
 
+        setVolume(volume);
+
         loadWindow();
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
+        audioPlayer.setVolume(volume);
+    }
+
+    public float getVolume() {
+        return volume;
     }
 
     public void playBGM() {
