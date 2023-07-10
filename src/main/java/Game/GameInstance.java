@@ -117,7 +117,6 @@ public class GameInstance extends JComponent implements KeyListener {
         gameBoard.add(gameBoard.getActiveTetrimino());
 
         lastActedTetrimino = gameBoard.getActiveTetrimino();
-        pressedKeys.clear();
 
         nextTetriminoNum = (int)(Math.random() * 7);
 
@@ -357,7 +356,6 @@ public class GameInstance extends JComponent implements KeyListener {
                     audioPlayer.resetBGM();
                     audioPlayer.playBGM();
                     reset();
-                    pressedKeys.clear();
                     gameOver = false;
                 }
 

@@ -4,14 +4,13 @@ import Game.GameInstance;
 import Menus.MainMenuInstance;
 import Sound.AudioPlayer;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
 public class Instance {
     private JFrame gameWindow;
@@ -64,11 +63,8 @@ public class Instance {
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLayout(null);
 
-        try {
-            gameWindow.setIconImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/icon.png"))));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("sprites/Menu/icon.png"));
+        gameWindow.setIconImage(logo.getImage());
 
         if (fullscreen) {
             gameWindow.setUndecorated(true);
