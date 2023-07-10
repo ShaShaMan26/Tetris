@@ -12,6 +12,7 @@ public class AudioPlayer {
     private final ArrayList<Clip> clips = new ArrayList<>();
     private final URL[] soundURL = new URL[12];
     private float volume;
+    private FloatControl fc;
 
     public AudioPlayer() {
         soundURL[0] = getClass().getResource("/audio/game_bgm.wav");
@@ -47,7 +48,7 @@ public class AudioPlayer {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             fc.setValue(volume);
             clips.add(clip);
             bgm = clip;
@@ -82,5 +83,8 @@ public class AudioPlayer {
 
     public void setVolume(float volume) {
         this.volume = volume;
+        if (fc != null) {
+            fc.setValue(volume);
+        }
     }
 }

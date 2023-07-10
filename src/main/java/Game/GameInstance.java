@@ -34,7 +34,6 @@ public class GameInstance extends JComponent implements KeyListener {
         this.gameWindow = instance.getGameWindow();
         highScore = instance.getHighScore();
 
-        audioPlayer.setVolume(instance.getVolume());
         audioPlayer.setBGM(0);
 
         resizeVisuals();
@@ -297,6 +296,7 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void run() {
+        audioPlayer.setVolume(instance.getVolume());
         audioPlayer.playBGM();
         running = true;
         gameWindow.addKeyListener(this);

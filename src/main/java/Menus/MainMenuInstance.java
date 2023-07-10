@@ -30,7 +30,8 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
 
         JButton[] buttons = {mainMenuBoard.getPlayButton(), mainMenuBoard.getOptionsButton(),
                 mainMenuBoard.getExitButton(), optionsBoard.getExitButton(), optionsBoard.getHardDropButton(),
-                optionsBoard.getGhostButton(), optionsBoard.getFullscreenButton()};
+                optionsBoard.getGhostButton(), optionsBoard.getFullscreenButton(), optionsBoard.getVolUpButton(),
+                optionsBoard.getVolDownButton()};
         for (JButton button : buttons) {
             button.addActionListener(this);
         }
@@ -79,6 +80,10 @@ public class MainMenuInstance extends JComponent implements KeyListener, ActionL
             } else if (e.getSource() == optionsBoard.getFullscreenButton()) {
                 instance.toggleFullscreen();
                 instance.setWantsChangeFullscreen(true);
+            } else if (e.getSource() == optionsBoard.getVolUpButton()) {
+                instance.increaseVolume();
+            } else if (e.getSource() == optionsBoard.getVolDownButton()) {
+                instance.decreaseVolume();
             }
         } else {
             if (e.getSource() == mainMenuBoard.getPlayButton()) {

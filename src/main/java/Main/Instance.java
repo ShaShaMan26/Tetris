@@ -44,13 +44,13 @@ public class Instance {
 
     public void increaseVolume() {
         if (volume < 6) {
-            setVolume(volume++);
+            setVolume(volume+1);
         }
     }
 
     public void decreaseVolume() {
         if (volume > -44) {
-            setVolume(volume--);
+            setVolume(volume-1);
         }
     }
 
@@ -158,6 +158,8 @@ public class Instance {
             gameWindow.dispose();
             loadWindow();
         }
+
+        mainMenuInstance.getOptionsBoard().setVolume((int) volume + 94);
     }
 
     public void startGame() {
