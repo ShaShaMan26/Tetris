@@ -29,20 +29,6 @@ public class AudioPlayer {
         soundURL[11] = getClass().getResource("/audio/pause.wav");
     }
 
-    public void setClip(int i) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            fc.setValue(volume);
-            clips.add(clip);
-            audioInputStream.close();
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void setBGM (int i) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
@@ -59,7 +45,18 @@ public class AudioPlayer {
     }
 
 
-    public void play() {
+    public void playClip(int i) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            fc.setValue(volume);
+            clips.add(clip);
+            audioInputStream.close();
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            throw new RuntimeException(e);
+        }
         clip.start();
     }
 

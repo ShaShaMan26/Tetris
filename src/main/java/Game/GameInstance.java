@@ -88,11 +88,6 @@ public class GameInstance extends JComponent implements KeyListener {
         ITetriminoSprite3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Tetriminos/I_Tetrimino_Sprite_3.png")));
     }
 
-    public void playSFX(int i) {
-        audioPlayer.setClip(i);
-        audioPlayer.play();
-    }
-
     public Tetrimino createTerimino(int tetriminoNum) {
         int xSpawn = 4;
         int ySpawn = 1;
@@ -128,7 +123,7 @@ public class GameInstance extends JComponent implements KeyListener {
             if (gameBoard.getActiveTetrimino() != null
                     && tetriminoNode.getXPos() == gameBoard.getActiveTetrimino().getXPos()
                     && tetriminoNode.getYPos() == gameBoard.getActiveTetrimino().getYPos()) {
-                playSFX(1);
+                audioPlayer.playClip(1);
                 gameOver();
             }
         }
@@ -139,7 +134,7 @@ public class GameInstance extends JComponent implements KeyListener {
         try {
             Thread.sleep(2000);
 
-            playSFX(10);
+            audioPlayer.playClip(10);
 
             gameOver = true;
         } catch (InterruptedException e) {
@@ -172,7 +167,7 @@ public class GameInstance extends JComponent implements KeyListener {
         } else {
             try {
                 audioPlayer.stopBGM();
-                playSFX(11);
+                audioPlayer.playClip(11);
                 BufferedImage gamePausedImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/pause_board.png")));
                 gameDisplay.setQueuedTetrimino(null);
                 gameBoard.setGameBoardImage(gamePausedImage);
@@ -196,7 +191,7 @@ public class GameInstance extends JComponent implements KeyListener {
             score += softDropNum;
             gameBoard.setActiveTetrimino(null);
             softDropNum = 0;
-            playSFX(6);
+            audioPlayer.playClip(6);
         }
     }
 
@@ -229,23 +224,23 @@ public class GameInstance extends JComponent implements KeyListener {
                     if (level == 9) {
                         extraClearedLines = clearedLines;
                     }
-                    playSFX(2);
+                    audioPlayer.playClip(2);
                 }
 
                 int pointValue;
 
                 if (numOfRowClears == 4) {
                     pointValue = 1200;
-                    playSFX(9);
+                    audioPlayer.playClip(9);
                 } else if (numOfRowClears == 3) {
                     pointValue = 300;
-                    playSFX(3);
+                    audioPlayer.playClip(3);
                 } else if (numOfRowClears == 2) {
                     pointValue = 100;
-                    playSFX(3);
+                    audioPlayer.playClip(3);
                 } else {
                     pointValue = 40;
-                    playSFX(3);
+                    audioPlayer.playClip(3);
                 }
                 score += pointValue * (level+1);
                 for (int i = 5; i > 0; i--) {
@@ -258,7 +253,7 @@ public class GameInstance extends JComponent implements KeyListener {
                     } catch (InterruptedException ignored) {
                     }
                 }
-                playSFX(7);
+                audioPlayer.playClip(7);
             }
 
             gameBoard.clearQueuedClears();
@@ -393,7 +388,7 @@ public class GameInstance extends JComponent implements KeyListener {
                                     || gameBoard.blocking(activeTetrimino)) {
                                 activeTetrimino.moveRight();
                             } else {
-                                playSFX(5);
+                                audioPlayer.playClip(5);
                             }
                             lastActedTetrimino = gameBoard.getActiveTetrimino();
                         }
@@ -404,7 +399,7 @@ public class GameInstance extends JComponent implements KeyListener {
                                     || gameBoard.blocking(activeTetrimino)) {
                                 activeTetrimino.moveLeft();
                             } else {
-                                playSFX(5);
+                                audioPlayer.playClip(5);
                             }
                             lastActedTetrimino = gameBoard.getActiveTetrimino();
                         }
@@ -419,7 +414,7 @@ public class GameInstance extends JComponent implements KeyListener {
                                 && instance.isHardDropEnabled()) {
                             score += gameBoard.hardDrop(activeTetrimino);
                             gameBoard.setActiveTetrimino(null);
-                            playSFX(6);
+                            audioPlayer.playClip(6);
                         }
                         if (keyCode == KeyEvent.VK_Q
                                 || keyCode == KeyEvent.VK_X) {
@@ -429,7 +424,7 @@ public class GameInstance extends JComponent implements KeyListener {
                                     || gameBoard.outOfVirBounds(activeTetrimino)) {
                                 activeTetrimino.rotateRight();
                             } else {
-                                playSFX(8);
+                                audioPlayer.playClip(8);
                             }
                         }
                         if (keyCode == KeyEvent.VK_E
@@ -440,7 +435,7 @@ public class GameInstance extends JComponent implements KeyListener {
                                     || gameBoard.outOfVirBounds(activeTetrimino)) {
                                 activeTetrimino.rotateLeft();
                             } else {
-                                playSFX(8);
+                                audioPlayer.playClip(8);
                             }
                         }
                     }

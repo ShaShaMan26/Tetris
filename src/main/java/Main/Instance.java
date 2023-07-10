@@ -45,12 +45,14 @@ public class Instance {
         if (volume < 6) {
             setVolume(volume+1);
         }
+        audioPlayer.playClip(5);
     }
 
     public void decreaseVolume() {
         if (volume > -44) {
             setVolume(volume-1);
         }
+        audioPlayer.playClip(5);
     }
 
     public float getVolume() {
@@ -125,16 +127,19 @@ public class Instance {
         if (wantsGame) {
             gameInstance.setLevel(0);   // 11 is max
             wantsGame = false;
+            audioPlayer.playClip(8);
             startGame();
         } else if (wantsOpenOptions) {
             wantsOpenOptions = false;
             optionsOpen = true;
             gameWindow.setResizable(false);
+            audioPlayer.playClip(7);
             openOptions();
         } else if(wantsCloseOptions) {
             wantsCloseOptions = false;
             optionsOpen = false;
             gameWindow.setResizable(true);
+            audioPlayer.playClip(6);
             closeOptions();
         } else if (wantsMainMenu) {
             wantsMainMenu = false;
@@ -146,6 +151,8 @@ public class Instance {
                 throw new RuntimeException(e);
             }
         } else if (wantsExit) {
+            audioPlayer.stopBGM();
+            audioPlayer.playClip(1);
             save();
             System.exit(69);
         } else if (wantsChangeFullscreen) {
@@ -302,13 +309,16 @@ public class Instance {
 
     public void toggleHardDrop() {
         hardDropEnabled = !hardDropEnabled;
+        audioPlayer.playClip(5);
     }
 
     public void toggleGhost() {
         ghostEnabled = !ghostEnabled;
+        audioPlayer.playClip(5);
     }
 
     public void toggleFullscreen() {
         fullscreen = !fullscreen;
+        audioPlayer.playClip(5);
     }
 }
