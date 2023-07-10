@@ -48,6 +48,6 @@ public class Main {
             }
         }
 
-        new Instance(hardDropEnabled, ghostEnabled, fullscreen, highScore, -40.0f).run();
+        new Instance(hardDropEnabled, ghostEnabled, fullscreen, highScore, -20.0f).run();
     }
 }

@@ -32,6 +32,7 @@ public class Instance {
         this.highScore = highScore;
 
         setVolume(volume);
+        audioPlayer.setBGM(4);
 
         loadWindow();
     }
@@ -43,15 +44,6 @@ public class Instance {
 
     public float getVolume() {
         return volume;
-    }
-
-    public void playBGM() {
-        audioPlayer.setClip(4, true);
-        audioPlayer.play();
-    }
-
-    public void stopBGM() {
-        audioPlayer.stopLoopingClips();
     }
 
     public void loadWindow() {
@@ -96,7 +88,6 @@ public class Instance {
     }
 
     public void setWindow() {
-        stopBGM();
         if (mainMenuInstance != null){
             gameWindow.remove(mainMenuInstance);
         }
@@ -118,14 +109,12 @@ public class Instance {
             gameWindow.add(gameInstance);
         } else {
             gameWindow.add(mainMenuInstance);
-            playBGM();
         }
         mainMenuInstance.requestFocus();
     }
 
     public void handleRequests() {
         if (wantsGame) {
-            stopBGM();
             gameInstance.setLevel(0);   // 11 is max
             wantsGame = false;
             startGame();
@@ -142,7 +131,6 @@ public class Instance {
         } else if (wantsMainMenu) {
             wantsMainMenu = false;
             returnToMainMenu();
-            playBGM();
 
             try {
                 gameInstance = new GameInstance(this);
@@ -154,7 +142,6 @@ public class Instance {
             System.exit(69);
         } else if (wantsChangeFullscreen) {
             wantsChangeFullscreen = false;
-            stopBGM();
 
             gameWindow.dispose();
             loadWindow();
@@ -162,6 +149,7 @@ public class Instance {
     }
 
     public void startGame() {
+        audioPlayer.stopBGM();
         gameWindow.remove(mainMenuInstance);
         gameWindow.add(gameInstance);
         gameInstance.run();
@@ -189,6 +177,8 @@ public class Instance {
     }
 
     public void returnToMainMenu() {
+        audioPlayer.resetBGM();
+        audioPlayer.playBGM();
         gameWindow.remove(gameInstance);
         gameWindow.add(mainMenuInstance);
         mainMenuInstance.requestFocus();
@@ -230,10 +220,13 @@ public class Instance {
         this.highScore = highScore;
     }
 
-    public void run() {long lastTime = System.nanoTime();
+    public void run() {
+        long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
         double delta = 0;
+        audioPlayer.resetBGM();
+        audioPlayer.playBGM();
         while (true) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;

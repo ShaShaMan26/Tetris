@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class AudioPlayer {
 
     private Clip clip;
-    private final ArrayList<Clip> loopingClips = new ArrayList<>();
+    private Clip bgm;
     private final ArrayList<Clip> clips = new ArrayList<>();
     private final URL[] soundURL = new URL[12];
     private float volume;
@@ -28,18 +28,29 @@ public class AudioPlayer {
         soundURL[11] = getClass().getResource("/audio/pause.wav");
     }
 
-    public void setClip(int i, boolean looping) {
+    public void setClip(int i) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             fc.setValue(volume);
-            if (looping) {
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-                loopingClips.add(clip);
-            }
             clips.add(clip);
+            audioInputStream.close();
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setBGM (int i) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL[i]);
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            fc.setValue(volume);
+            clips.add(clip);
+            bgm = clip;
             audioInputStream.close();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);
@@ -51,10 +62,16 @@ public class AudioPlayer {
         clip.start();
     }
 
-    public void stopLoopingClips() {
-        for (Clip clip : loopingClips) {
-            clip.stop();
-        }
+    public void playBGM() {
+        bgm.loop(Clip.LOOP_CONTINUOUSLY);
+    }
+
+    public void stopBGM() {
+        bgm.stop();
+    }
+
+    public void resetBGM() {
+        bgm.setMicrosecondPosition(0);
     }
 
     public void close() {
