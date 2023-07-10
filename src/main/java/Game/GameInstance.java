@@ -161,13 +161,15 @@ public class GameInstance extends JComponent implements KeyListener {
         score = 0;
         clearedLines = 0;
         level = 0;
+
+        updateGameDisplay();
     }
 
     public void togglePause() {
         if (paused) {
             audioPlayer.playBGM();
             gameBoard.setGameBoardImage(null);
-
+            updateGameDisplay();
             paused = false;
         } else {
             try {
@@ -262,15 +264,14 @@ public class GameInstance extends JComponent implements KeyListener {
             }
 
             gameBoard.clearQueuedClears();
-
-            updateGameDisplay();
-
             if (gameBoard.getActiveTetrimino() == null) {
                 try {
                     spawnTetrimino();
+                    updateGameDisplay();
                 } catch (IOException ignored) {
                 }
             }
+
         } else if (gameOver) {
             try {
                 BufferedImage gameOverBoard = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/Menu/game_over_board.png")));
@@ -308,6 +309,7 @@ public class GameInstance extends JComponent implements KeyListener {
 
         try {
             spawnTetrimino();
+            updateGameDisplay();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
