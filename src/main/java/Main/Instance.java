@@ -61,7 +61,7 @@ public class Instance {
 
     public void loadWindow() {
         gameWindow = new JFrame();
-        gameWindow.setTitle("Tetris");
+        gameWindow.setTitle("Sha's Tetris");
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLayout(null);
 
