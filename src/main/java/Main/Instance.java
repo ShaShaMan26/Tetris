@@ -42,6 +42,18 @@ public class Instance {
         audioPlayer.setVolume(volume);
     }
 
+    public void increaseVolume() {
+        if (volume < 6) {
+            setVolume(volume++);
+        }
+    }
+
+    public void decreaseVolume() {
+        if (volume > -44) {
+            setVolume(volume--);
+        }
+    }
+
     public float getVolume() {
         return volume;
     }
@@ -273,6 +285,8 @@ public class Instance {
             } else {
                 fileWriter.write("0");
             }
+
+            fileWriter.write("\n" + volume);
 
             fileWriter.close();
         } catch (IOException e) {

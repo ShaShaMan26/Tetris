@@ -24,6 +24,7 @@ public class Main {
         boolean hardDropEnabled = false;
         boolean ghostEnabled = false;
         boolean fullscreen = false;
+        float volume = 0;
         try {
             Scanner saveDataScanner = new Scanner(new File(savePath));
             highScore = saveDataScanner.nextInt();
@@ -36,18 +37,19 @@ public class Main {
             if (saveDataScanner.nextInt() > 0) {
                 fullscreen = true;
             }
+            volume = saveDataScanner.nextFloat();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (NoSuchElementException e) {
             try {
                 FileWriter fileWriter = new FileWriter(savePath);
-                fileWriter.write("0\n0\n0\n0");
+                fileWriter.write("0\n0\n0\n0\n-19.0");
                 fileWriter.close();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
 
-        new Instance(hardDropEnabled, ghostEnabled, fullscreen, highScore, -20.0f).run();
+        new Instance(hardDropEnabled, ghostEnabled, fullscreen, highScore, volume).run();
     }
 }
