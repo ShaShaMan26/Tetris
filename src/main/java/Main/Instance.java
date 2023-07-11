@@ -151,7 +151,6 @@ public class Instance {
             }
         } else if (wantsExit) {
             audioPlayer.stopBGM();
-            audioPlayer.playClip(1);
             save();
             System.exit(69);
         } else if (wantsChangeFullscreen) {

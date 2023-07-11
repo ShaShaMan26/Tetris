@@ -259,6 +259,11 @@ public class GameInstance extends JComponent implements KeyListener {
             gameBoard.clearQueuedClears();
             if (gameBoard.getActiveTetrimino() == null) {
                 try {
+                    if (score > instance.getHighScore()) {
+                        instance.setHighScore(score);
+                        highScore = instance.getHighScore();
+                    }
+
                     spawnTetrimino();
                     updateGameDisplay();
                 } catch (IOException ignored) {
@@ -276,11 +281,6 @@ public class GameInstance extends JComponent implements KeyListener {
 
         gameBoard.updateTetriminoTileSize();
         gameDisplay.updateTetriminoTileSize();
-
-        if (score > instance.getHighScore()) {
-            instance.setHighScore(score);
-            highScore = instance.getHighScore();
-        }
 
         gameWindow.setResizable(true);
     }
