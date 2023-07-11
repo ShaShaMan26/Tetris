@@ -290,6 +290,7 @@ public class GameInstance extends JComponent implements KeyListener {
     }
 
     public void run() {
+        gameBoard.setGhostPieceEnabled(instance.isGhostEnabled());
         audioPlayer.setVolume(instance.getVolume());
         audioPlayer.playBGM();
         running = true;

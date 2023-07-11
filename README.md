@@ -79,3 +79,10 @@ or increment the game volume respectively.
 ```
 
 *Left-click the `X` at the top right of the menu panel or press `ESC` to close the Options Menu.*
+
+## Known Issues
+
+ - Minor sprite flicker on Tetriminos when acting upon them (only happens at refresh rates above 60hz... I think).
+ - Line clear animation sometimes fails to play (have no clue why this occurs, I think it has to do with threading).
+ - Game Over can sometimes be triggered twice.
+ - Queued Tetrimino sometimes displays outside queue box (dependent on window size).

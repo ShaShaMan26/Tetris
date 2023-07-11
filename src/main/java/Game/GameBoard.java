@@ -17,7 +17,7 @@ public class GameBoard extends JComponent {
     private final int boardHeight;
     private final int tileSize;
     private Tetrimino activeTetrimino;
-    private final boolean ghostPieceEnabled;
+    private boolean ghostPieceEnabled;
     private BufferedImage gameBoardImage;
 
     public GameBoard(Dimension displayDimension, boolean ghostPieceEnabled) {
@@ -29,6 +29,10 @@ public class GameBoard extends JComponent {
         int displayCenter = displayDimension.width / 2;
 
         this.setBounds(displayCenter - (boardWidth / 2), 0, boardWidth, boardHeight);
+    }
+
+    public void setGhostPieceEnabled(boolean ghostPieceEnabled) {
+        this.ghostPieceEnabled = ghostPieceEnabled;
     }
 
     public void setActiveTetrimino(Tetrimino tetrimino) {

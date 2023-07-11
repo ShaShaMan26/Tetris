@@ -125,7 +125,7 @@ public class Instance {
 
     public void handleRequests() {
         if (wantsGame) {
-            gameInstance.setLevel(0);   // 11 is max
+            gameInstance.setLevel(0);
             wantsGame = false;
             audioPlayer.playClip(8);
             startGame();
