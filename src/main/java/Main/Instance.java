@@ -5,7 +5,6 @@ import Menus.MainMenuInstance;
 import Sound.AudioPlayer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.FileWriter;

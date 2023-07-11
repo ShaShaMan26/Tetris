@@ -1,5 +1,7 @@
 # Sha's Tetris
 
+![](https://cdn.shashack.org/Tetris/Clip4.gif)
+
 A Game Boy styled version of Tetris.
 
 ## Download
@@ -19,9 +21,13 @@ If the `.jar` isn't launching, ensure you have [Java](https://www.java.com/en/do
 This version of Tetris plays just like you'd expect from any other version, but is most similar in game feel to that of 
 Nintendo's 1989 *Tetris* for the Game Boy. Those familiar with that iteration of the Tetris should feel right at home.
 
+![](https://cdn.shashack.org/Tetris/Clip5.gif)
+
 ### Controls
 
 *Sha's Tetris* is controlled using the mouse in menus and keyboard in game.
+
+![](https://cdn.shashack.org/Tetris/Clip2.gif)
 
 #### In-Game
 
@@ -52,7 +58,9 @@ ESC - Ends the program and auto saves game data.
 ### Menus
 
 Upon launching *Sha's Tetris*, you will be brought to the Main Menu. Here you can select `Play Game`, `Options`, or 
-`Exit`.  
+`Exit`.
+
+![](https://cdn.shashack.org/Tetris/screenshot8.png)
 ```
 "Play Game" - Starts the game.  
 "Options" - Brings up the Options Menu.  
@@ -62,8 +70,9 @@ Upon launching *Sha's Tetris*, you will be brought to the Main Menu. Here you ca
 #### Options
 
 Inside the Options Menu are three toggleable settings: `Hard Drop`, `Ghost Piece`, and `Fullscreen`.
-Active toggles are signified by a filled in square to the left of the respective setting's title.  
+Active toggles are signified by a filled in square to the left of the respective setting's title.
 
+![](https://cdn.shashack.org/Tetris/screenshot9.png)
 ```
 "Hard Drop" - Allows Tetriminos to be instantly dropped to the bottom of the game well.
 "Ghost Piece" - Displays a phantom Tetrimino corresponding to where the current Tetrimino would land 
@@ -73,12 +82,28 @@ if left to fall to the bottom of the well.
 
 The Options Menu also houses global volume controls.
 
+![](https://cdn.shashack.org/Tetris/Clip1.gif)
+
 ```
 Left-clicking the "minus" or "plus" symbol on either side of the current volume number will decrement
 or increment the game volume respectively.
 ```
 
 *Left-click the `X` at the top right of the menu panel or press `ESC` to close the Options Menu.*
+
+![](https://cdn.shashack.org/Tetris/Clip3.gif)
+
+## Screenshots
+
+![](https://cdn.shashack.org/Tetris/screenshot1.png)
+
+![](https://cdn.shashack.org/Tetris/screenshot8.png)
+
+![](https://cdn.shashack.org/Tetris/screenshot2.png)
+
+![](https://cdn.shashack.org/Tetris/screenshot7.png)
+
+![](https://cdn.shashack.org/Tetris/screenshot5.png)
 
 ## Known Issues
 
