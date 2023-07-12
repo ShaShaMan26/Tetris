@@ -18,8 +18,8 @@ If the `.jar` isn't launching, ensure you have [Java](https://www.java.com/en/do
 
 ### Gameplay
 
-This version of Tetris plays just like you'd expect from any other version, but is most similar in game feel to that of 
-Nintendo's 1989 *Tetris* for the Game Boy. Those familiar with that iteration of the Tetris should feel right at home.
+This version of Tetris plays about as you'd expect from any other version, but is most similar to that of 
+1989's *Tetris* for the Game Boy. Those familiar with that iteration of Tetris should feel right at home.
 
 ![](https://cdn.shashack.org/Tetris/Clip5.gif)
 
