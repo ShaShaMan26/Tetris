@@ -353,6 +353,7 @@ public class GameInstance extends JComponent implements KeyListener {
                     audioPlayer.playBGM();
                     reset();
                     gameOver = false;
+                    pressedKeys.clear();
                 }
 
                 Tetrimino activeTetrimino = gameBoard.getActiveTetrimino();
