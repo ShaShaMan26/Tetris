@@ -12,7 +12,7 @@ for Windows operating systems.
 ## Setup
 
 Simply download and run `Sha's-Tetris.jar` to play.  
-If the `.jar` isn't launching, ensure you have [Java](https://www.java.com/en/download/) downloaded.
+If the `.jar` isn't launching, ensure you have [Java](https://download.oracle.com/java/19/archive/jdk-19.0.2_windows-x64_bin.exe) downloaded.
 
 ## How to Play
 
