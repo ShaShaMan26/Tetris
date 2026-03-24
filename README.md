@@ -4,9 +4,9 @@
 
 A Game Boy styled version of Tetris.
 
-## Download
+## Download (NOTE: The original site that files for this readme were hosted at has been taken down, only necessary download links have been restored)
 
-You can download the game [here](https://cdn.shashack.org/Tetris/Sha's-Tetris.jar) 
+You can download the game [here](https://www.mediafire.com/file/dc98bqhipay059m/Tetris.jar/file) 
 for Windows operating systems.  
 
 ## Setup
